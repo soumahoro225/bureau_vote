@@ -32,14 +32,14 @@
 
     h2 {
       margin-top: 0.2rem;
-      margin-bottom: 0.8rem;
+      margin-bottom: 0.4rem;
       font-size: 1.4rem;
     }
 
     .search-row {
       display: flex;
       gap: 0.5rem;
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.4rem;
     }
 
     #search {
@@ -96,8 +96,10 @@
     .small-note {
       font-size: 0.8rem;
       color: #6b7280;
-      margin-top: 0.4rem;
+      margin-top: 0.1rem;
+      margin-bottom: 0.4rem;
     }
+    .small-note strong { font-weight: 600; }
 
     @media (max-width: 900px) {
       body { flex-direction: column; }
@@ -112,11 +114,11 @@
     <h2>Trouver mon bureau de vote</h2>
 
     <div class="search-row">
-      <input id="search" type="text" placeholder="Saisissez votre adresse (ex : 2 Rue de la Halle)" autocomplete="off">
+      <input id="search" type="text" placeholder="Ex : 2 Rue de la Halle" autocomplete="off">
       <button id="btnSearch">OK</button>
     </div>
-    <div class="small-note">
-      Tapez votre adresse : les suggestions apparaissent automatiquement après 3 caractères.
+    <div id="info-note" class="small-note">
+      Chargement des adresses...
     </div>
 
     <div id="results"></div>
@@ -132,23 +134,27 @@
   <div id="map"></div>
 
   <script>
-    // ======================
-    // 1. Carte
-    // ======================
+    // --- Carte ---
     var map = L.map('map').setView([46.8, 2.5], 6);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19
     }).addTo(map);
-
     var marker = null;
 
-    // ======================
-    // 2. Chargement données JSON / GeoJSON
-    // ======================
+    // --- Données ---
     let ADRESSES = [];
     let fuse = null;
 
+    function normalizeText(s) {
+      return (s || "")
+        .toString()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "") // enlève les accents
+        .toLowerCase();
+    }
+
     async function loadData() {
+      const note = document.getElementById("info-note");
       try {
         const res = await fetch('adresses_bv.json');
         const raw = await res.json();
@@ -157,39 +163,54 @@
         if (Array.isArray(raw)) {
           ADRESSES = raw;
         }
-        // Cas 2 : GeoJSON { type, features: [...] }
+        // Cas 2 : GeoJSON
         else if (raw && Array.isArray(raw.features)) {
           ADRESSES = raw.features.map(f => {
             const props = f.properties || {};
             let lat = null, lng = null;
             if (f.geometry && Array.isArray(f.geometry.coordinates)) {
-              // GeoJSON Point : [lon, lat]
               lng = f.geometry.coordinates[0];
               lat = f.geometry.coordinates[1];
             }
             return Object.assign({}, props, { lat: lat, lng: lng });
           });
         } else {
-          console.error("Format JSON inattendu", raw);
           ADRESSES = [];
+          note.textContent = "Format JSON inattendu (ni tableau, ni GeoJSON.features).";
+          return;
         }
 
-        // Init Fuse avec les bons champs
+        // Normalisation pour la recherche insensible à la casse + accents
+        ADRESSES = ADRESSES.map(d => ({
+          ...d,
+          adresse_norm:       normalizeText(d.adresse),
+          Loc_BV_norm:        normalizeText(d.Loc_BV),
+          Lieu_de_vote_norm:  normalizeText(d.Lieu_de_vote)
+        }));
+
         fuse = new Fuse(ADRESSES, {
-          keys: ['adresse', 'Loc_BV', 'Lieu_de_vote'],
+          keys: ['adresse_norm', 'Loc_BV_norm', 'Lieu_de_vote_norm'],
           threshold: 0.3,
           minMatchCharLength: 3
         });
+
+        note.innerHTML = `<strong>${ADRESSES.length}</strong> adresses chargées. Tapez au moins 3 caractères pour voir les suggestions.`;
+
+        if (ADRESSES.length === 0) {
+          document.getElementById('fiche-content').innerHTML =
+            "Attention : le fichier <code>adresses_bv.json</code> ne contient aucune adresse.";
+        }
       } catch (e) {
-        console.error("Erreur de chargement du JSON :", e);
+        console.error("Erreur chargement JSON :", e);
+        note.textContent = "Erreur lors du chargement du fichier adresses_bv.json.";
+        document.getElementById('fiche-content').innerHTML =
+          "Impossible de lire le fichier <code>adresses_bv.json</code>. Vérifiez qu'il est valide.";
       }
     }
 
     loadData();
 
-    // ======================
-    // 3. Recherche
-    // ======================
+    // --- Recherche ---
     async function doSearch(options = { showMinMsg: false }) {
       const q = document.getElementById('search').value.trim();
       const resultsDiv = document.getElementById('results');
@@ -206,7 +227,9 @@
         return;
       }
 
-      const results = fuse.search(q, { limit: 30 });
+      const qNorm = normalizeText(q);
+      const results = fuse.search(qNorm, { limit: 30 });
+
       if (results.length === 0) {
         resultsDiv.innerHTML = "<div class='result-item'>Aucune adresse trouvée.</div>";
         document.getElementById('fiche-content').innerHTML = "Aucun résultat.";
@@ -226,9 +249,7 @@
       showFiche(results[0].item);
     }
 
-    // ======================
-    // 4. Fiche + carte
-    // ======================
+    // --- Fiche + carte ---
     function showFiche(d) {
       const html = `
         <p><span class="label">Adresse :</span> ${d.adresse ?? '-'}</p>
@@ -245,9 +266,7 @@
       }
     }
 
-    // ======================
-    // 5. Événements (auto-complétion)
-    // ======================
+    // --- Événements ---
     let searchTimeout = null;
 
     document.getElementById('btnSearch').addEventListener('click', function () {
