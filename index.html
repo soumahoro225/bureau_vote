@@ -149,7 +149,7 @@
       return (s || "")
         .toString()
         .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "") // enlève les accents
+        .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase();
     }
 
@@ -159,37 +159,35 @@
         const res = await fetch('adresses_bv.json');
         const raw = await res.json();
 
-        // Cas 1 : tableau simple
+        // 1) Tableau simple déjà plat (rare avec ArcGIS Pro, mais on gère)
         if (Array.isArray(raw)) {
           ADRESSES = raw;
         }
-        // Cas 2 : GeoJSON
+        // 2) Format ArcGIS / GeoJSON avec "features"
         else if (raw && Array.isArray(raw.features)) {
           ADRESSES = raw.features.map(f => {
-            const props = f.properties || {};
-            let lat = null, lng = null;
-            if (f.geometry && Array.isArray(f.geometry.coordinates)) {
-              lng = f.geometry.coordinates[0];
-              lat = f.geometry.coordinates[1];
-            }
-            return Object.assign({}, props, { lat: lat, lng: lng });
+            const props = f.attributes || f.properties || {};
+            // on garde lat/lon des attributs (tes champs), pas la géométrie projetée
+            return {
+              ...props,
+              lat: props.lat,
+              lon: props.lon
+            };
           });
         } else {
           ADRESSES = [];
-          note.textContent = "Format JSON inattendu (ni tableau, ni GeoJSON.features).";
+          note.textContent = "Format JSON inattendu (ni tableau, ni objet avec 'features').";
           return;
         }
 
-        // Normalisation pour la recherche insensible à la casse + accents
+        // Normalisation pour recherche sur l'adresse
         ADRESSES = ADRESSES.map(d => ({
           ...d,
-          adresse_norm:       normalizeText(d.adresse),
-          Loc_BV_norm:        normalizeText(d.Loc_BV),
-          Lieu_de_vote_norm:  normalizeText(d.Lieu_de_vote)
+          adresse_norm: normalizeText(d.adresse)
         }));
 
         fuse = new Fuse(ADRESSES, {
-          keys: ['adresse_norm', 'Loc_BV_norm', 'Lieu_de_vote_norm'],
+          keys: ['adresse_norm'],
           threshold: 0.3,
           minMatchCharLength: 3
         });
@@ -204,7 +202,7 @@
         console.error("Erreur chargement JSON :", e);
         note.textContent = "Erreur lors du chargement du fichier adresses_bv.json.";
         document.getElementById('fiche-content').innerHTML =
-          "Impossible de lire le fichier <code>adresses_bv.json</code>. Vérifiez qu'il est valide.";
+          "Impossible de lire le fichier <code>adresses_bv.json</code>.";
       }
     }
 
@@ -259,10 +257,10 @@
       `;
       document.getElementById('fiche-content').innerHTML = html;
 
-      if (d.lat && d.lng) {
+      if (d.lat && d.lon) {
         if (marker) map.removeLayer(marker);
-        marker = L.marker([d.lat, d.lng]).addTo(map);
-        map.setView([d.lat, d.lng], 17);
+        marker = L.marker([d.lat, d.lon]).addTo(map);
+        map.setView([d.lat, d.lon], 17);
       }
     }
 
