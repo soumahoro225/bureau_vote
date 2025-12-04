@@ -1,162 +1,219 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Trouver mon bureau de vote</title>
 
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
   <style>
+    * { box-sizing: border-box; }
+
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       margin: 0;
-      display: flex;
       height: 100vh;
-      background: #f3f4f6;
+      display: flex;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #e0edff 0, #f5f5f7 45%, #fdfdfd 100%);
+      color: #0f172a;
     }
 
+    /* --------- Panneau gauche --------- */
     #left {
-      width: 38%;
-      padding: 1.25rem 1.5rem;
-      box-sizing: border-box;
-      background: #ffffff;
-      box-shadow: 2px 0 10px rgba(15, 23, 42, 0.08);
+      width: 40%;
+      min-width: 340px;
+      padding: 1.4rem 1.6rem;
+      background: rgba(255,255,255,0.96);
+      border-right: 1px solid #e5e7eb;
+      backdrop-filter: blur(6px);
       display: flex;
       flex-direction: column;
+      gap: 0.9rem;
+      box-shadow: 4px 0 18px rgba(15,23,42,0.06);
+      z-index: 10;
+    }
+
+    #map {
+      flex: 1;
+    }
+
+    .app-header {
+      display: flex;
+      align-items: center;
       gap: 0.75rem;
     }
 
-    #map { flex: 1; }
+    .app-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
+      color: #f9fafb;
+      font-size: 1.1rem;
+      box-shadow: 0 6px 14px rgba(37,99,235,0.35);
+    }
 
-    h2 {
+    h1 {
       margin: 0;
-      font-size: 1.4rem;
-      font-weight: 600;
-      color: #111827;
+      font-size: 1.35rem;
+      font-weight: 650;
+      letter-spacing: .01em;
+      color: #0f172a;
     }
 
     .subtitle {
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       color: #6b7280;
+      margin-bottom: 0.25rem;
     }
 
+    /* --------- Barre de recherche --------- */
     .search-row {
       display: flex;
-      gap: 0.5rem;
+      gap: 0.55rem;
+      align-items: center;
     }
 
     #search {
       flex: 1;
-      padding: 0.55rem 0.65rem;
+      padding: 0.55rem 0.75rem;
       border-radius: 999px;
       border: 1px solid #d1d5db;
       font-size: 0.95rem;
       outline: none;
-      transition: border-color 0.15s, box-shadow 0.15s;
+      transition: border-color 0.16s, box-shadow 0.16s, background-color 0.16s;
+      background-color: #f9fafb;
     }
 
     #search:focus {
       border-color: #2563eb;
-      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+      box-shadow: 0 0 0 2px rgba(37,99,235,0.18);
+      background-color: #ffffff;
     }
 
     #btnSearch {
-      padding: 0.5rem 0.9rem;
+      padding: 0.48rem 0.95rem;
       border-radius: 999px;
       border: none;
-      background: #2563eb;
-      color: white;
-      font-weight: 500;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #ffffff;
       font-size: 0.9rem;
+      font-weight: 600;
       cursor: pointer;
-      white-space: nowrap;
+      box-shadow: 0 4px 10px rgba(37,99,235,0.35);
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
     }
 
-    #btnSearch:hover { background: #1d4ed8; }
+    #btnSearch:hover {
+      filter: brightness(1.05);
+    }
+
+    #btnSearch span.icon {
+      font-size: 0.95rem;
+    }
 
     #info-note {
       font-size: 0.8rem;
       color: #6b7280;
     }
 
+    /* --------- Liste des suggestions --------- */
     #results {
-      max-height: 170px;
+      max-height: 180px;
       overflow-y: auto;
-      border-radius: 10px;
-      border: 1px solid #e5e7eb;
-      background: #fafafa;
-    }
-
-    .result-item {
-      padding: 0.45rem 0.7rem;
-      cursor: pointer;
-      border-bottom: 1px solid #e5e7eb;
-      font-size: 0.9rem;
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-    }
-
-    .result-item:last-child { border-bottom: none; }
-
-    .result-item span.badge {
-      background: #e5e7eb;
-      border-radius: 999px;
-      padding: 0.05rem 0.45rem;
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      letter-spacing: 0.03em;
-      color: #4b5563;
-    }
-
-    .result-item:hover { background: #e0ecff; }
-
-    .fiche-card {
-      margin-top: 0.25rem;
-      padding: 0.9rem;
-      border-radius: 14px;
+      border-radius: 12px;
       border: 1px solid #e5e7eb;
       background: #f9fafb;
     }
 
-    .fiche-header {
+    .result-item {
+      padding: 0.45rem 0.7rem;
+      font-size: 0.9rem;
       display: flex;
       align-items: center;
+      gap: 0.45rem;
+      cursor: pointer;
+      border-bottom: 1px solid #edf0f4;
+      transition: background-color 0.12s, padding-left 0.12s;
+    }
+
+    .result-item:last-child {
+      border-bottom: none;
+    }
+
+    .result-item:hover {
+      background: #e1edff;
+      padding-left: 0.85rem;
+    }
+
+    .result-badge {
+      font-size: 0.7rem;
+      padding: 0.08rem 0.55rem;
+      border-radius: 999px;
+      background: #e0ebff;
+      color: #1d4ed8;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .result-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* --------- Fiche bureau --------- */
+    .fiche-card {
+      margin-top: 0.1rem;
+      padding: 0.95rem 1rem;
+      border-radius: 14px;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      box-shadow: 0 10px 20px rgba(15,23,42,0.04);
+    }
+
+    .fiche-header {
+      display: flex;
       justify-content: space-between;
+      align-items: center;
       margin-bottom: 0.5rem;
     }
 
     .fiche-title {
+      margin: 0;
       font-size: 1rem;
       font-weight: 600;
-      color: #111827;
-      margin: 0;
+      color: #0f172a;
     }
 
     .fiche-badge-bv {
-      padding: 0.2rem 0.6rem;
+      padding: 0.18rem 0.75rem;
       border-radius: 999px;
       background: #1d4ed8;
-      color: white;
-      font-size: 0.75rem;
+      color: #f9fafb;
+      font-size: 0.78rem;
       font-weight: 600;
+      box-shadow: 0 4px 10px rgba(37,99,235,0.4);
     }
 
     .fiche-section-title {
-      font-size: 0.75rem;
-      font-weight: 600;
+      margin-top: 0.15rem;
+      font-size: 0.76rem;
+      font-weight: 650;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.09em;
       color: #6b7280;
-      margin-top: 0.1rem;
-      margin-bottom: 0.15rem;
     }
 
     .fiche-line {
-      font-size: 0.88rem;
-      color: #111827;
-      margin: 0.05rem 0;
+      margin: 0.08rem 0;
+      font-size: 0.9rem;
     }
 
     .fiche-label {
@@ -166,7 +223,12 @@
 
     .fiche-divider {
       border-top: 1px dashed #d1d5db;
-      margin: 0.4rem 0 0.45rem 0;
+      margin: 0.45rem 0 0.5rem 0;
+    }
+
+    .fiche-bv-name {
+      color: #1d4ed8;
+      font-weight: 650;
     }
 
     .fiche-empty {
@@ -174,56 +236,71 @@
       color: #6b7280;
     }
 
-    .fiche-link {
-      margin-top: 0.35rem;
-    }
-
     .btn-itineraire {
-      display: inline-block;
-      padding: 0.35rem 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.38rem 0.9rem;
+      margin-top: 0.45rem;
       border-radius: 999px;
-      background: #2563eb;
+      background: #16a34a;
       color: #ffffff;
-      font-size: 0.85rem;
-      font-weight: 500;
+      font-size: 0.86rem;
+      font-weight: 600;
       text-decoration: none;
-      border: none;
-      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(22,163,74,0.35);
     }
 
     .btn-itineraire:hover {
-      background: #1d4ed8;
+      filter: brightness(1.05);
       text-decoration: none;
     }
 
+    .btn-itineraire span.icon {
+      font-size: 0.95rem;
+    }
+
     @media (max-width: 900px) {
-      body { flex-direction: column; }
+      body {
+        flex-direction: column;
+      }
       #left {
         width: 100%;
-        box-shadow: none;
+        border-right: none;
         border-bottom: 1px solid #e5e7eb;
+        box-shadow: 0 4px 16px rgba(15,23,42,0.08);
       }
-      #map { height: 50vh; }
+      #map {
+        height: 50vh;
+      }
     }
   </style>
 </head>
 
 <body>
   <div id="left">
-    <h2>Trouver mon bureau de vote</h2>
-    <div class="subtitle">Saisissez votre adresse pour connaître votre bureau de vote.</div>
+    <div class="app-header">
+      <div class="app-icon">🗳️</div>
+      <div>
+        <h1>Trouver mon bureau de vote</h1>
+        <p class="subtitle">Saisissez votre adresse pour afficher votre bureau de vote et l’itinéraire.</p>
+      </div>
+    </div>
 
     <div class="search-row">
-      <input id="search" type="text" placeholder="Ex : 2 Rue de la Halle" autocomplete="off">
-      <button id="btnSearch">OK</button>
+      <input id="search" type="text" placeholder="Ex : 2 Rue de la Halle" autocomplete="off" />
+      <button id="btnSearch">
+        <span class="icon">🔍</span>
+        <span>Rechercher</span>
+      </button>
     </div>
-    <div id="info-note">Chargement des adresses...</div>
 
+    <div id="info-note">Chargement des adresses...</div>
     <div id="results"></div>
 
     <div class="fiche-card">
       <div class="fiche-header">
-        <h3 class="fiche-title">Fiche bureau de vote</h3>
+        <h2 class="fiche-title">Fiche bureau de vote</h2>
         <span id="badge-bv" class="fiche-badge-bv" style="display:none;"></span>
       </div>
       <div id="fiche-content" class="fiche-empty">
@@ -235,108 +312,78 @@
   <div id="map"></div>
 
   <script>
-    // ===== Carte (IGN si clé, sinon OSM) =====
-    // Remplace 'VOTRE_CLE_IGN_ICI' par ta clé Géoportail pour activer le fond IGN
-    var IGN_API_KEY = 'VOTRE_CLE_IGN_ICI';
+    // ---------- Fond de carte IGN / OSM ----------
+    var IGN_API_KEY = "VOTRE_CLE_IGN_ICI";
 
-    var baseLayer;
+    var baseLayer =
+      (IGN_API_KEY && IGN_API_KEY !== "VOTRE_CLE_IGN_ICI")
+        ? L.tileLayer(
+            "https://wxs.ign.fr/" + IGN_API_KEY +
+            "/geoportail/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0" +
+            "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal" +
+            "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}" +
+            "&FORMAT=image/png",
+            { maxZoom: 19 }
+          )
+        : L.tileLayer(
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            { maxZoom: 19 }
+          );
 
-    if (IGN_API_KEY && IGN_API_KEY !== 'VOTRE_CLE_IGN_ICI') {
-      baseLayer = L.tileLayer(
-        'https://wxs.ign.fr/' + IGN_API_KEY +
-        '/geoportail/wmts?' +
-        'SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0' +
-        '&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2' +
-        '&STYLE=normal&TILEMATRIXSET=PM' +
-        '&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}' +
-        '&FORMAT=image%2Fpng',
-        {
-          maxZoom: 19,
-          attribution: '&copy; IGN / Géoportail'
-        }
-      );
-    } else {
-      baseLayer = L.tileLayer(
-        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-        {
-          maxZoom: 19,
-          attribution: '&copy; OpenStreetMap contributeurs'
-        }
-      );
-    }
-
-    var map = L.map('map', {
+    var map = L.map("map", {
       center: [46.8, 2.5],
       zoom: 6,
-      layers: [baseLayer]
+      layers: [baseLayer],
     });
+
     var marker = null;
 
-    // ===== Données =====
-    let ADRESSES = [];          // 1 ligne par adresse
-    let BUREAUX_BY_BV = {};     // BV -> bureau
+    // ---------- Données ----------
+    let ADRESSES = [];
+    let BUREAUX_BY_BV = {};
 
-    function normalizeText(s) {
+    function normalize(s) {
       return (s || "")
-        .toString()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase();
     }
 
-    function getGoogleMapsUrl(text) {
-      if (!text || typeof text !== "string") return null;
-      const m = text.match(/https?:\/\/\S+/);
-      return m ? m[0] : null;
-    }
-
     async function loadData() {
       const note = document.getElementById("info-note");
       try {
-        const [resAddr, resBV] = await Promise.all([
-          fetch('adresses_bv.json'),
-          fetch('bureaux_bv.json')
+        const [addrRes, bvRes] = await Promise.all([
+          fetch("adresses_bv.json"),
+          fetch("bureaux_bv.json"),
         ]);
 
-        const rawAddr = await resAddr.json();
-        const rawBV   = await resBV.json();
+        const rawAddr = await addrRes.json();
+        const rawBV = await bvRes.json();
 
         // --- Adresses ---
         if (Array.isArray(rawAddr)) {
           ADRESSES = rawAddr.map(a => ({
             adresse: a.adresse,
             BV: a.BV,
-            Bureau_de_vote_2025: a.Bureau_de_vote_2025,
+            lat: a.lat, lon: a.lon,
             Lieu_de_vote: a.Lieu_de_vote,
             Loc_BV: a.Loc_BV,
-            lat: a.lat,
-            lon: a.lon,
-            adresse_norm: normalizeText(a.adresse)
+            adresse_norm: normalize(a.adresse)
           }));
-        } else if (rawAddr && Array.isArray(rawAddr.features)) {
+        } else if (rawAddr && rawAddr.features) {
           ADRESSES = rawAddr.features.map(f => {
             const a = f.attributes || f.properties || {};
             let lat = a.lat, lon = a.lon;
-            if ((!lat || !lon) && f.geometry) {
-              const g = f.geometry;
-              if (Array.isArray(g.coordinates)) {
-                lon = g.coordinates[0];
-                lat = g.coordinates[1];
-              } else if (typeof g.x === "number" && typeof g.y === "number") {
-                lon = g.x;
-                lat = g.y;
-              }
+            if (f.geometry && typeof f.geometry.x === "number") {
+              lon = f.geometry.x; lat = f.geometry.y;
             }
-            const adresse = a.adresse;
             return {
-              adresse: adresse,
+              adresse: a.adresse,
               BV: a.BV,
-              Bureau_de_vote_2025: a.Bureau_de_vote_2025,
+              lat, lon,
               Lieu_de_vote: a.Lieu_de_vote,
               Loc_BV: a.Loc_BV,
-              lat: lat,
-              lon: lon,
-              adresse_norm: normalizeText(adresse)
+              adresse_norm: normalize(a.adresse)
             };
           });
         }
@@ -345,179 +392,134 @@
         let bureaux = [];
         if (Array.isArray(rawBV)) {
           bureaux = rawBV;
-        } else if (rawBV && Array.isArray(rawBV.features)) {
+        } else if (rawBV && rawBV.features) {
           bureaux = rawBV.features.map(f => {
             const a = f.attributes || f.properties || {};
             let lat = a.lat, lon = a.lon;
-            if ((!lat || !lon) && f.geometry) {
-              const g = f.geometry;
-              if (Array.isArray(g.coordinates)) {
-                lon = g.coordinates[0];
-                lat = g.coordinates[1];
-              } else if (typeof g.x === "number" && typeof g.y === "number") {
-                lon = g.x;
-                lat = g.y;
-              }
+            if (f.geometry && typeof f.geometry.x === "number") {
+              lon = f.geometry.x; lat = f.geometry.y;
             }
             return {
               BV: a.BV,
               libelle: a.libelle,
               adresse_complete: a.adresse_complete,
               url_itineraire: a.url_itineraire,
-              lat: lat,
-              lon: lon
+              lat, lon
             };
           });
         }
 
         BUREAUX_BY_BV = {};
-        bureaux.forEach(bv => {
-          if (bv.BV != null) {
-            BUREAUX_BY_BV[bv.BV] = bv;
-          }
-        });
+        bureaux.forEach(b => { if (b.BV != null) BUREAUX_BY_BV[b.BV] = b; });
 
-        note.textContent = ADRESSES.length + " adresses chargées. Tapez au moins 3 caractères pour voir des résultats.";
+        note.textContent = ADRESSES.length + " adresses chargées. Tapez au moins 3 caractères pour commencer la recherche.";
+
       } catch (e) {
         console.error(e);
-        document.getElementById("info-note").textContent =
-          "Erreur lors du chargement des fichiers JSON.";
+        note.textContent = "Erreur lors du chargement des données.";
       }
     }
 
     loadData();
 
-    // ===== Recherche =====
+    // ---------- Recherche ----------
     function search() {
-      const q = document.getElementById('search').value.trim();
-      const resultsDiv = document.getElementById('results');
+      const q = document.getElementById("search").value.trim();
+      const div = document.getElementById("results");
 
-      if (!ADRESSES.length) {
-        resultsDiv.innerHTML = "<div class='result-item'>Données en cours de chargement...</div>";
-        return;
-      }
+      if (q.length < 3) { div.innerHTML = ""; return; }
 
-      if (q.length < 3) {
-        resultsDiv.innerHTML = "";
-        return;
-      }
-
-      const qNorm = normalizeText(q);
-
-      const matches = ADRESSES
-        .filter(d => d.adresse_norm && d.adresse_norm.includes(qNorm))
+      const qn = normalize(q);
+      const results = ADRESSES
+        .filter(a => a.adresse_norm && a.adresse_norm.includes(qn))
         .slice(0, 30);
 
-      if (matches.length === 0) {
-        resultsDiv.innerHTML = "<div class='result-item'>Aucune adresse trouvée.</div>";
-        document.getElementById('fiche-content').textContent = "Aucun résultat.";
-        document.getElementById('badge-bv').style.display = 'none';
+      if (!results.length) {
+        div.innerHTML = "<div class='result-item'><span class='result-text'>Aucune adresse trouvée.</span></div>";
         return;
       }
 
-      resultsDiv.innerHTML = "";
-      matches.forEach(d => {
-        const div = document.createElement('div');
-        div.className = 'result-item';
-        div.innerHTML = `<span class="badge">BV ${d.BV}</span> <span>${d.adresse}</span>`;
-        div.onclick = () => showFiche(d);
-        resultsDiv.appendChild(div);
+      div.innerHTML = "";
+      results.forEach(r => {
+        const d = document.createElement("div");
+        d.className = "result-item";
+        d.innerHTML = `
+          <span class="result-badge">BV ${r.BV}</span>
+          <span class="result-text">${r.adresse}</span>
+        `;
+        d.onclick = () => showFiche(r);
+        div.appendChild(d);
       });
 
-      showFiche(matches[0]);
+      showFiche(results[0]);
     }
 
-    // ===== Fiche + carte centrée sur le BV =====
+    let searchTimer = null;
+    document.getElementById("btnSearch").onclick = search;
+    document.getElementById("search").onkeyup = (e) => {
+      if (e.key === "Enter") return search();
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(search, 200);
+    };
+
+    // ---------- Fiche + carte ----------
     function showFiche(d) {
-      const bv = (d.BV != null) ? BUREAUX_BY_BV[d.BV] : null;
+      const bv = BUREAUX_BY_BV[d.BV];
 
-      // Badge BV
-      const badge = document.getElementById('badge-bv');
-      if (d.BV != null) {
-        badge.textContent = "BV " + d.BV;
-        badge.style.display = 'inline-block';
-      } else {
-        badge.style.display = 'none';
-      }
+      const badge = document.getElementById("badge-bv");
+      badge.style.display = "inline-block";
+      badge.textContent = "BV " + d.BV;
 
-      // Infos texte
       const nomBV = (bv && bv.libelle) || d.Lieu_de_vote || "-";
       const adrBV = (bv && bv.adresse_complete) || d.Loc_BV || "-";
 
-      // URL Google Maps : depuis url_itineraire du BV ou Loc_BV si lien
-      const gmapsUrl = getGoogleMapsUrl(
-        (bv && bv.url_itineraire) || d.Loc_BV
-      );
-
-      // URL pour l’itinéraire : si on a lat/lon du BV, on fabrique un lien /dir
+      // Itinéraire Google Maps : adresse saisie -> bureau
       let directionUrl = null;
       if (bv && bv.lat && bv.lon) {
-        directionUrl = `https://www.google.com/maps/dir/?api=1&destination=${bv.lat},${bv.lon}`;
-      } else if (gmapsUrl) {
-        directionUrl = gmapsUrl;
+        directionUrl =
+          "https://www.google.com/maps/dir/?api=1" +
+          "&origin=" + encodeURIComponent(d.adresse || "") +
+          "&destination=" + bv.lat + "," + bv.lon;
       }
 
-      const boutonHtml = directionUrl
-        ? `<div class="fiche-link">
-             <a class="btn-itineraire"
-                href="${directionUrl}"
-                target="_blank"
-                rel="noopener noreferrer">
-               Itinéraire Google Maps
-             </a>
-           </div>`
-        : "";
-
-      const html = `
+      const ficheHtml = `
         <div>
           <div class="fiche-section-title">Adresse recherchée</div>
           <p class="fiche-line">
-            <span class="fiche-label">Adresse :</span> ${d.adresse ?? '-'}
+            <span class="fiche-label">Adresse :</span> ${d.adresse || "-"}
           </p>
 
           <div class="fiche-divider"></div>
 
           <div class="fiche-section-title">Bureau de vote</div>
           <p class="fiche-line">
-            <span class="fiche-label">Nom du bureau :</span> ${nomBV}
+            <span class="fiche-label">Nom du bureau :</span>
+            <span class="fiche-bv-name">${nomBV}</span>
           </p>
           <p class="fiche-line">
             <span class="fiche-label">Adresse du bureau :</span> ${adrBV}
           </p>
-          ${boutonHtml}
+
+          ${directionUrl ? `
+            <a class="btn-itineraire" href="${directionUrl}" target="_blank" rel="noopener noreferrer">
+              <span class="icon">📍</span>
+              <span>Itinéraire Google Maps</span>
+            </a>
+          ` : ""}
         </div>
       `;
-      document.getElementById('fiche-content').innerHTML = html;
 
-      // Coordonnées : priorité au BV
-      let lat = null, lon = null;
-      if (bv && bv.lat && bv.lon) {
-        lat = bv.lat;
-        lon = bv.lon;
-      } else if (d.lat && d.lon) {
-        lat = d.lat;
-        lon = d.lon;
-      }
+      document.getElementById("fiche-content").innerHTML = ficheHtml;
 
+      // Carte centrée sur le bureau
+      let lat = bv?.lat || d.lat;
+      let lon = bv?.lon || d.lon;
       if (lat && lon) {
         if (marker) map.removeLayer(marker);
         marker = L.marker([lat, lon]).addTo(map);
         map.setView([lat, lon], 17);
       }
     }
-
-    // ===== Événements =====
-    let searchTimeout = null;
-
-    document.getElementById('btnSearch').addEventListener('click', search);
-    document.getElementById('search').addEventListener('keyup', function (e) {
-      if (e.key === 'Enter') {
-        search();
-        return;
-      }
-      clearTimeout(searchTimeout);
-      searchTimeout = setTimeout(search, 200);
-    });
   </script>
 </body>
 </html>
