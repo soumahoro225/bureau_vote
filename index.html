@@ -15,16 +15,16 @@
       height: 100vh;
       display: flex;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top left, #e1f0ff 0, #f5f7fb 45%, #ffffff 100%);
+      background: radial-gradient(circle at top left, #e0edff 0, #f5f5f7 45%, #fdfdfd 100%);
       color: #0f172a;
     }
 
-    /* Panneau gauche */
+    /* --------- Panneau gauche --------- */
     #left {
       width: 40%;
       min-width: 340px;
       padding: 1.4rem 1.6rem;
-      background: rgba(255,255,255,0.97);
+      background: rgba(255,255,255,0.96);
       border-right: 1px solid #e5e7eb;
       backdrop-filter: blur(6px);
       display: flex;
@@ -34,7 +34,9 @@
       z-index: 10;
     }
 
-    #map { flex: 1; }
+    #map {
+      flex: 1;
+    }
 
     .app-header {
       display: flex;
@@ -43,35 +45,36 @@
     }
 
     .app-icon {
-      width: 38px;
-      height: 38px;
+      width: 36px;
+      height: 36px;
       border-radius: 999px;
       display: flex;
       align-items: center;
       justify-content: center;
-      background: linear-gradient(135deg, #0080FF, #4ba9ff);
+      background: linear-gradient(135deg, #2563eb, #3b82f6);
       color: #f9fafb;
       font-size: 1.1rem;
-      box-shadow: 0 6px 14px rgba(0,128,255,0.40);
+      box-shadow: 0 6px 14px rgba(37,99,235,0.35);
     }
 
     h1 {
       margin: 0;
       font-size: 1.35rem;
       font-weight: 650;
+      letter-spacing: .01em;
       color: #0f172a;
     }
 
     .subtitle {
       font-size: 0.82rem;
       color: #6b7280;
-      margin-bottom: 0.2rem;
+      margin-bottom: 0.25rem;
     }
 
-    /* Recherche */
+    /* --------- Barre de recherche --------- */
     .search-row {
       display: flex;
-      gap: 0.45rem;
+      gap: 0.55rem;
       align-items: center;
     }
 
@@ -81,53 +84,46 @@
       border-radius: 999px;
       border: 1px solid #d1d5db;
       font-size: 0.95rem;
-      background-color: #f9fafb;
       outline: none;
-      transition: border-color .16s, box-shadow .16s, background-color .16s;
+      transition: border-color 0.16s, box-shadow 0.16s, background-color 0.16s;
+      background-color: #f9fafb;
     }
 
     #search:focus {
-      border-color: #0080FF;
-      box-shadow: 0 0 0 2px rgba(0,128,255,0.20);
+      border-color: #2563eb;
+      box-shadow: 0 0 0 2px rgba(37,99,235,0.18);
       background-color: #ffffff;
     }
-
-    #btnClear {
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      font-size: 1rem;
-      padding: 0.2rem;
-      color: #94a3b8;
-      transition: color .15s;
-    }
-
-    #btnClear:hover { color: #475569; }
 
     #btnSearch {
       padding: 0.48rem 0.95rem;
       border-radius: 999px;
       border: none;
-      background: linear-gradient(135deg, #0080FF, #0066cc);
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
       color: #ffffff;
       font-size: 0.9rem;
       font-weight: 600;
       cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0,128,255,0.40);
+      box-shadow: 0 4px 10px rgba(37,99,235,0.35);
       display: flex;
       align-items: center;
       gap: 0.25rem;
-      white-space: nowrap;
     }
 
-    #btnSearch:hover { filter: brightness(1.05); }
+    #btnSearch:hover {
+      filter: brightness(1.05);
+    }
+
+    #btnSearch span.icon {
+      font-size: 0.95rem;
+    }
 
     #info-note {
       font-size: 0.8rem;
       color: #6b7280;
     }
 
-    /* Résultats */
+    /* --------- Liste des suggestions --------- */
     #results {
       max-height: 180px;
       overflow-y: auto;
@@ -144,28 +140,24 @@
       gap: 0.45rem;
       cursor: pointer;
       border-bottom: 1px solid #edf0f4;
-      transition: background-color .12s, padding-left .12s, border-left .12s;
+      transition: background-color 0.12s, padding-left 0.12s;
     }
 
-    .result-item:last-child { border-bottom: none; }
+    .result-item:last-child {
+      border-bottom: none;
+    }
 
     .result-item:hover {
-      background: #e0efff;
+      background: #e1edff;
       padding-left: 0.85rem;
-    }
-
-    .result-item.selected {
-      background: #d4e6ff;
-      padding-left: 0.9rem;
-      border-left: 3px solid #0080FF;
     }
 
     .result-badge {
       font-size: 0.7rem;
       padding: 0.08rem 0.55rem;
       border-radius: 999px;
-      background: #e1efff;
-      color: #0080FF;
+      background: #e0ebff;
+      color: #1d4ed8;
       font-weight: 600;
       letter-spacing: 0.03em;
     }
@@ -176,7 +168,7 @@
       text-overflow: ellipsis;
     }
 
-    /* Fiche */
+    /* --------- Fiche bureau --------- */
     .fiche-card {
       margin-top: 0.1rem;
       padding: 0.95rem 1rem;
@@ -197,17 +189,17 @@
       margin: 0;
       font-size: 1rem;
       font-weight: 600;
+      color: #0f172a;
     }
 
     .fiche-badge-bv {
-      padding: 0.32rem 1rem;
+      padding: 0.18rem 0.75rem;
       border-radius: 999px;
-      background: #0080FF;
-      color: #ffffff;
-      font-size: 0.95rem;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      box-shadow: 0 4px 10px rgba(0,128,255,0.40);
+      background: #1d4ed8;
+      color: #f9fafb;
+      font-size: 0.78rem;
+      font-weight: 600;
+      box-shadow: 0 4px 10px rgba(37,99,235,0.4);
     }
 
     .fiche-section-title {
@@ -219,16 +211,30 @@
       color: #6b7280;
     }
 
-    .fiche-line { margin: 0.08rem 0; font-size: 0.9rem; }
-    .fiche-label { color: #6b7280; margin-right: 0.25rem; }
-    .fiche-bv-name { color: #0080FF; font-weight: 650; }
+    .fiche-line {
+      margin: 0.08rem 0;
+      font-size: 0.9rem;
+    }
+
+    .fiche-label {
+      color: #6b7280;
+      margin-right: 0.25rem;
+    }
 
     .fiche-divider {
       border-top: 1px dashed #d1d5db;
       margin: 0.45rem 0 0.5rem 0;
     }
 
-    .fiche-empty { font-size: 0.86rem; color: #6b7280; }
+    .fiche-bv-name {
+      color: #1d4ed8;
+      font-weight: 650;
+    }
+
+    .fiche-empty {
+      font-size: 0.86rem;
+      color: #6b7280;
+    }
 
     .btn-itineraire {
       display: inline-flex;
@@ -250,10 +256,23 @@
       text-decoration: none;
     }
 
+    .btn-itineraire span.icon {
+      font-size: 0.95rem;
+    }
+
     @media (max-width: 900px) {
-      body { flex-direction: column; }
-      #left { width: 100%; border-right:none; border-bottom:1px solid #e5e7eb; }
-      #map { height: 50vh; }
+      body {
+        flex-direction: column;
+      }
+      #left {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #e5e7eb;
+        box-shadow: 0 4px 16px rgba(15,23,42,0.08);
+      }
+      #map {
+        height: 50vh;
+      }
     }
   </style>
 </head>
@@ -264,14 +283,16 @@
       <div class="app-icon">🗳️</div>
       <div>
         <h1>Trouver mon bureau de vote</h1>
-        <p class="subtitle">Saisissez votre adresse pour connaître votre bureau de vote et l’itinéraire.</p>
+        <p class="subtitle">Saisissez votre adresse pour afficher votre bureau de vote et l’itinéraire.</p>
       </div>
     </div>
 
     <div class="search-row">
       <input id="search" type="text" placeholder="Ex : 2 Rue de la Halle" autocomplete="off" />
-      <button id="btnClear" title="Effacer la recherche">✖</button>
-      <button id="btnSearch"><span class="icon">🔍</span><span>Rechercher</span></button>
+      <button id="btnSearch">
+        <span class="icon">🔍</span>
+        <span>Rechercher</span>
+      </button>
     </div>
 
     <div id="info-note">Chargement des adresses...</div>
@@ -291,11 +312,23 @@
   <div id="map"></div>
 
   <script>
-    // ----- Fond de carte (OSM) -----
-    var baseLayer = L.tileLayer(
-      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-      { maxZoom: 19 }
-    );
+    // ---------- Fond de carte IGN / OSM ----------
+    var IGN_API_KEY = "VOTRE_CLE_IGN_ICI";
+
+    var baseLayer =
+      (IGN_API_KEY && IGN_API_KEY !== "VOTRE_CLE_IGN_ICI")
+        ? L.tileLayer(
+            "https://wxs.ign.fr/" + IGN_API_KEY +
+            "/geoportail/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0" +
+            "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal" +
+            "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}" +
+            "&FORMAT=image/png",
+            { maxZoom: 19 }
+          )
+        : L.tileLayer(
+            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+            { maxZoom: 19 }
+          );
 
     var map = L.map("map", {
       center: [46.8, 2.5],
@@ -305,24 +338,9 @@
 
     var marker = null;
 
-    // ----- Icône URNE BLEUE (SVG inline) -----
-    var voteIcon = L.icon({
-      iconUrl: "data:image/svg+xml;utf8,\
-<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>\
-<rect x='8' y='22' width='48' height='34' rx='4' ry='4' fill='%230080FF'/>\
-<rect x='20' y='10' width='24' height='16' rx='3' ry='3' fill='%230080FF'/>\
-<rect x='14' y='28' width='36' height='18' rx='2' ry='2' fill='white'/>\
-<path d='M20 18h24' stroke='white' stroke-width='4' stroke-linecap='round'/>\
-</svg>",
-      iconSize: [42, 42],
-      iconAnchor: [21, 42],
-      popupAnchor: [0, -42]
-    });
-
-    // ----- Données -----
+    // ---------- Données ----------
     let ADRESSES = [];
     let BUREAUX_BY_BV = {};
-    let lastSelectedResult = null;
 
     function normalize(s) {
       return (s || "")
@@ -342,27 +360,60 @@
         const rawAddr = await addrRes.json();
         const rawBV = await bvRes.json();
 
+        // --- Adresses ---
         if (Array.isArray(rawAddr)) {
           ADRESSES = rawAddr.map(a => ({
             adresse: a.adresse,
             BV: a.BV,
-            lat: a.lat,
-            lon: a.lon,
+            lat: a.lat, lon: a.lon,
             Lieu_de_vote: a.Lieu_de_vote,
             Loc_BV: a.Loc_BV,
             adresse_norm: normalize(a.adresse)
           }));
-        }
-
-        if (Array.isArray(rawBV)) {
-          rawBV.forEach(b => {
-            if (b.BV != null) {
-              BUREAUX_BY_BV[b.BV] = b;
+        } else if (rawAddr && rawAddr.features) {
+          ADRESSES = rawAddr.features.map(f => {
+            const a = f.attributes || f.properties || {};
+            let lat = a.lat, lon = a.lon;
+            if (f.geometry && typeof f.geometry.x === "number") {
+              lon = f.geometry.x; lat = f.geometry.y;
             }
+            return {
+              adresse: a.adresse,
+              BV: a.BV,
+              lat, lon,
+              Lieu_de_vote: a.Lieu_de_vote,
+              Loc_BV: a.Loc_BV,
+              adresse_norm: normalize(a.adresse)
+            };
           });
         }
 
+        // --- Bureaux ---
+        let bureaux = [];
+        if (Array.isArray(rawBV)) {
+          bureaux = rawBV;
+        } else if (rawBV && rawBV.features) {
+          bureaux = rawBV.features.map(f => {
+            const a = f.attributes || f.properties || {};
+            let lat = a.lat, lon = a.lon;
+            if (f.geometry && typeof f.geometry.x === "number") {
+              lon = f.geometry.x; lat = f.geometry.y;
+            }
+            return {
+              BV: a.BV,
+              libelle: a.libelle,
+              adresse_complete: a.adresse_complete,
+              url_itineraire: a.url_itineraire,
+              lat, lon
+            };
+          });
+        }
+
+        BUREAUX_BY_BV = {};
+        bureaux.forEach(b => { if (b.BV != null) BUREAUX_BY_BV[b.BV] = b; });
+
         note.textContent = ADRESSES.length + " adresses chargées. Tapez au moins 3 caractères pour commencer la recherche.";
+
       } catch (e) {
         console.error(e);
         note.textContent = "Erreur lors du chargement des données.";
@@ -371,56 +422,12 @@
 
     loadData();
 
-    // ----- Itinéraire : position actuelle -> BV -----
-    function openItineraire(destLat, destLon) {
-      if (!destLat || !destLon) return;
-
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          function (pos) {
-            const oLat = pos.coords.latitude;
-            const oLon = pos.coords.longitude;
-            const url =
-              "https://www.google.com/maps/dir/?api=1" +
-              "&origin=" + oLat + "," + oLon +
-              "&destination=" + destLat + "," + destLon;
-            window.open(url, "_blank");
-          },
-          function () {
-            const url =
-              "https://www.google.com/maps/dir/?api=1" +
-              "&destination=" + destLat + "," + destLon;
-            window.open(url, "_blank");
-          }
-        );
-      } else {
-        const url =
-          "https://www.google.com/maps/dir/?api=1" +
-          "&destination=" + destLat + "," + destLon;
-        window.open(url, "_blank");
-      }
-    }
-
-    // ----- Surbrillance résultat -----
-    function markSelectedResult(elem) {
-      if (lastSelectedResult) {
-        lastSelectedResult.classList.remove("selected");
-      }
-      if (elem) {
-        elem.classList.add("selected");
-        lastSelectedResult = elem;
-      }
-    }
-
-    // ----- Recherche + suggestions -----
+    // ---------- Recherche ----------
     function search() {
       const q = document.getElementById("search").value.trim();
       const div = document.getElementById("results");
 
-      if (q.length < 3) {
-        div.innerHTML = "";
-        return;
-      }
+      if (q.length < 3) { div.innerHTML = ""; return; }
 
       const qn = normalize(q);
       const results = ADRESSES
@@ -429,8 +436,6 @@
 
       if (!results.length) {
         div.innerHTML = "<div class='result-item'><span class='result-text'>Aucune adresse trouvée.</span></div>";
-        document.getElementById("fiche-content").textContent = "Aucun résultat.";
-        document.getElementById("badge-bv").style.display = "none";
         return;
       }
 
@@ -442,80 +447,42 @@
           <span class="result-badge">BV ${r.BV}</span>
           <span class="result-text">${r.adresse}</span>
         `;
-        d.onclick = () => {
-          // écrire l'adresse choisie dans la barre de recherche
-          document.getElementById("search").value = r.adresse;
-          markSelectedResult(d);
-          showFiche(r);
-        };
+        d.onclick = () => showFiche(r);
         div.appendChild(d);
       });
 
-      // Sélectionner / afficher le premier résultat
-      const firstItem = div.firstElementChild;
-      if (firstItem) {
-        markSelectedResult(firstItem);
-        document.getElementById("search").value = results[0].adresse;
-      }
       showFiche(results[0]);
     }
 
     let searchTimer = null;
     document.getElementById("btnSearch").onclick = search;
     document.getElementById("search").onkeyup = (e) => {
-      if (e.key === "Enter") {
-        search();
-        return;
-      }
+      if (e.key === "Enter") return search();
       clearTimeout(searchTimer);
       searchTimer = setTimeout(search, 200);
     };
 
-    // Bouton effacer
-    document.getElementById("btnClear").onclick = () => {
-      document.getElementById("search").value = "";
-      document.getElementById("results").innerHTML = "";
-      document.getElementById("badge-bv").style.display = "none";
-      document.getElementById("fiche-content").textContent =
-        "Saisissez une adresse pour afficher les informations associées.";
-      if (marker) {
-        map.removeLayer(marker);
-        marker = null;
-      }
-      lastSelectedResult = null;
-    };
-
-    // ----- Fiche + carte -----
+    // ---------- Fiche + carte ----------
     function showFiche(d) {
+      const bv = BUREAUX_BY_BV[d.BV];
+
       const badge = document.getElementById("badge-bv");
-      const fiche = document.getElementById("fiche-content");
-      const bv = (d && d.BV != null) ? BUREAUX_BY_BV[d.BV] : null;
+      badge.style.display = "inline-block";
+      badge.textContent = "BV " + d.BV;
 
-      if (!d) return;
+      const nomBV = (bv && bv.libelle) || d.Lieu_de_vote || "-";
+      const adrBV = (bv && bv.adresse_complete) || d.Loc_BV || "-";
 
-      // Badge BV
-      if (d.BV != null) {
-        badge.style.display = "inline-block";
-        badge.textContent = "BV " + d.BV;
-      } else {
-        badge.style.display = "none";
+      // Itinéraire Google Maps : adresse saisie -> bureau
+      let directionUrl = null;
+      if (bv && bv.lat && bv.lon) {
+        directionUrl =
+          "https://www.google.com/maps/dir/?api=1" +
+          "&origin=" + encodeURIComponent(d.adresse || "") +
+          "&destination=" + bv.lat + "," + bv.lon;
       }
 
-      const nomBV = bv && bv.libelle ? bv.libelle : (d.Lieu_de_vote || "-");
-      const adrBV = bv && bv.adresse_complete ? bv.adresse_complete : (d.Loc_BV || "-");
-
-      let destLat = null, destLon = null;
-      if (bv && typeof bv.lat === "number" && typeof bv.lon === "number") {
-        destLat = bv.lat;
-        destLon = bv.lon;
-      } else if (typeof d.lat === "number" && typeof d.lon === "number") {
-        destLat = d.lat;
-        destLon = d.lon;
-      }
-
-      const hasCoords = destLat != null && destLon != null;
-
-      const html = `
+      const ficheHtml = `
         <div>
           <div class="fiche-section-title">Adresse recherchée</div>
           <p class="fiche-line">
@@ -533,10 +500,8 @@
             <span class="fiche-label">Adresse du bureau :</span> ${adrBV}
           </p>
 
-          ${hasCoords ? `
-            <a class="btn-itineraire"
-               href="#"
-               onclick="openItineraire(${destLat}, ${destLon}); return false;">
+          ${directionUrl ? `
+            <a class="btn-itineraire" href="${directionUrl}" target="_blank" rel="noopener noreferrer">
               <span class="icon">📍</span>
               <span>Itinéraire Google Maps</span>
             </a>
@@ -544,23 +509,15 @@
         </div>
       `;
 
-      fiche.innerHTML = html;
+      document.getElementById("fiche-content").innerHTML = ficheHtml;
 
-      // Carte + popup
-      if (hasCoords) {
-        if (marker) {
-          map.removeLayer(marker);
-        }
-        marker = L.marker([destLat, destLon], { icon: voteIcon }).addTo(map);
-
-        const popupHtml = `
-          <strong>BV ${d.BV || ""}</strong><br/>
-          ${nomBV}<br/>
-          <span style="font-size:0.85rem;color:#4b5563;">${adrBV}</span>
-        `;
-        marker.bindPopup(popupHtml).openPopup();
-
-        map.setView([destLat, destLon], 17);
+      // Carte centrée sur le bureau
+      let lat = bv?.lat || d.lat;
+      let lon = bv?.lon || d.lon;
+      if (lat && lon) {
+        if (marker) map.removeLayer(marker);
+        marker = L.marker([lat, lon]).addTo(map);
+        map.setView([lat, lon], 17);
       }
     }
   </script>
