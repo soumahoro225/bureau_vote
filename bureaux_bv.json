@@ -1,0 +1,71 @@
+{
+  "displayFieldName" : "",
+  "fieldAliases" : {
+    "OBJECTID" : "OBJECTID",
+    "code" : "code",
+    "libelle" : "libelle",
+    "adresse_numero" : "adresse_numero",
+    "adresse_voie" : "adresse_voie",
+    "adresse_codepostal" : "adresse_codepostal",
+    "adresse_commune_libelle" : "adresse_commune_libelle",
+    "adresse_complete" : "adresse_complete",
+    "BV" : "BV"
+  },
+  "geometryType" : "esriGeometryPoint",
+  "spatialReference" : {
+    "wkid" : 4326,
+    "latestWkid" : 4326
+  },
+  "fields" : [
+    {
+      "name" : "OBJECTID",
+      "type" : "esriFieldTypeOID",
+      "alias" : "OBJECTID"
+    },
+    {
+      "name" : "code",
+      "type" : "esriFieldTypeInteger",
+      "alias" : "code"
+    },
+    {
+      "name" : "libelle",
+      "type" : "esriFieldTypeString",
+      "alias" : "libelle",
+      "length" : 8000
+    },
+    {
+      "name" : "adresse_numero",
+      "type" : "esriFieldTypeInteger",
+      "alias" : "adresse_numero"
+    },
+    {
+      "name" : "adresse_voie",
+      "type" : "esriFieldTypeString",
+      "alias" : "adresse_voie",
+      "length" : 8000
+    },
+    {
+      "name" : "adresse_codepostal",
+      "type" : "esriFieldTypeInteger",
+      "alias" : "adresse_codepostal"
+    },
+    {
+      "name" : "adresse_commune_libelle",
+      "type" : "esriFieldTypeString",
+      "alias" : "adresse_commune_libelle",
+      "length" : 8000
+    },
+    {
+      "name" : "adresse_complete",
+      "type" : "esriFieldTypeString",
+      "alias" : "adresse_complete",
+      "length" : 8000
+    },
+    {
+      "name" : "BV",
+      "type" : "esriFieldTypeInteger",
+      "alias" : "BV"
+    }
+  ],
+  "features" : [{"attributes":{"OBJECTID":1,"code":1,"libelle":"Hôtel de Ville A","adresse_numero":1,"adresse_voie":"PLACE D'ARMES","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"0 PLACE D'ARMES 59300 Valenciennes","BV":1},"geometry":{"x":3.5233047000000397,"y":50.357805700000029}},{"attributes":{"OBJECTID":2,"code":2,"libelle":"Espace Lelièvre","adresse_numero":10,"adresse_voie":"RUE DES URSULINES","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"0 RUE DES URSULINES 59300 Valenciennes","BV":2},"geometry":{"x":3.5258822330000612,"y":50.35559263500005}},{"attributes":{"OBJECTID":3,"code":3,"libelle":"Hôtel de Ville B","adresse_numero":1,"adresse_voie":"PLACE D'ARMES","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"0 PLACE D'ARMES 59300 Valenciennes","BV":3},"geometry":{"x":3.5233047000000397,"y":50.357805700000029}},{"attributes":{"OBJECTID":4,"code":4,"libelle":"Ecole Maternelle Cariot","adresse_numero":5,"adresse_voie":"RUE DU CARIOT","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"5 RUE DU CARIOT 59300 Valenciennes","BV":4},"geometry":{"x":3.5202625370000646,"y":50.360457929000063}},{"attributes":{"OBJECTID":5,"code":5,"libelle":"Ecole Maternelle Jean Bonmarché A","adresse_numero":14,"adresse_voie":"RUE JEAN BONMARCHE","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"14 RUE JEAN BONMARCHE 59300 Valenciennes","BV":5},"geometry":{"x":3.5252816680000478,"y":50.351749019000067}},{"attributes":{"OBJECTID":6,"code":6,"libelle":"Palais des Sports Nungesser A","adresse_numero":110,"adresse_voie":"AVENUE DES SPORTS","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"0 AVENUE DES SPORTS 59300 Valenciennes","BV":6},"geometry":{"x":3.5290492290000657,"y":50.347793359000036}},{"attributes":{"OBJECTID":7,"code":7,"libelle":"Ecole Maternelle Hélène Boucher","adresse_numero":5,"adresse_voie":"RUE PIERRE DAUTEL","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"5 RUE PIERRE DAUTEL 59300 Valenciennes","BV":7},"geometry":{"x":3.5131920530000684,"y":50.341950614000041}},{"attributes":{"OBJECTID":8,"code":8,"libelle":"Maison des Associations","adresse_numero":84,"adresse_voie":"RUE DU FG DE PARIS","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"84 RUE DU FG DE PARIS 59300 Valenciennes","BV":8},"geometry":{"x":3.5113440510000373,"y":50.353504774000044}},{"attributes":{"OBJECTID":9,"code":9,"libelle":"Gymnase Eisen A","adresse_numero":0,"adresse_voie":"RUE DES 100 TETESRUE DES 100 TETES","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"0 RUE DES 100 TETES 59300 Valenciennes","BV":9},"geometry":{"x":3.5316260000000739,"y":50.36586600000004}},{"attributes":{"OBJECTID":10,"code":10,"libelle":"Gymnase Eisen B","adresse_numero":0,"adresse_voie":"RUE DES 100 TETES","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"0 RUE DES 100 TETES 59300 Valenciennes","BV":10},"geometry":{"x":3.5316260000000739,"y":50.36586600000004}},{"attributes":{"OBJECTID":11,"code":11,"libelle":"VIP Complexe sportif Pierre Carous A","adresse_numero":0,"adresse_voie":"AVENUE DU 327EME R.I.","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"0 AVENUE DU 327EME R.I. 59300 Valenciennes","BV":11},"geometry":{"x":3.5360724430000232,"y":50.359397519000026}},{"attributes":{"OBJECTID":12,"code":12,"libelle":"VIP Complexe sportif Pierre Carous B","adresse_numero":0,"adresse_voie":"AVENUE DU 327EME R.I.","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"0 AVENUE DU 327EME R.I. 59300 Valenciennes","BV":12},"geometry":{"x":3.5360724430000232,"y":50.359397519000026}},{"attributes":{"OBJECTID":13,"code":13,"libelle":"Ecole Maternelle Jean Bonmarché B","adresse_numero":14,"adresse_voie":"RUE JEAN BONMARCHE","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"14 RUE JEAN BONMARCHE 59300 Valenciennes","BV":13},"geometry":{"x":3.525272608000023,"y":50.351785841000037}},{"attributes":{"OBJECTID":14,"code":14,"libelle":"Palais des Sports Nungesser B","adresse_numero":110,"adresse_voie":"AVENUE DES SPORTS","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennnes","adresse_complete":"110 AVENUE DES SPORTS 59300 Valenciennnes","BV":14},"geometry":{"x":3.5289620230000764,"y":50.347823729000027}},{"attributes":{"OBJECTID":15,"code":15,"libelle":"Ecole maternelle Antoine de Saint-Exupéry","adresse_numero":122,"adresse_voie":"CHEMIN DES BOURGEOIS","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"122 CHEMIN DES BOURGEOIS 59300 Valenciennes","BV":15},"geometry":{"x":3.5173819790000493,"y":50.342855680000071}},{"attributes":{"OBJECTID":16,"code":16,"libelle":"Base Nautique du Vignoble","adresse_numero":null,"adresse_voie":"CHEMIN DU HALAGE","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"0 CHEMIN DU HALAGE 59300 Valenciennes","BV":16},"geometry":{"x":3.5048865210000599,"y":50.345435463000058}},{"attributes":{"OBJECTID":17,"code":17,"libelle":"Ecole Primaire Acacias A","adresse_numero":10,"adresse_voie":"PLACE DES ACACIAS","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"10 PLACE DES ACACIAS 59300 Valenciennes","BV":17},"geometry":{"x":3.5090550130000224,"y":50.359124613000063}},{"attributes":{"OBJECTID":18,"code":18,"libelle":"Ecole Primaire Acacias B","adresse_numero":10,"adresse_voie":"PLACE DES ACACIAS","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"10 PLACE DES ACACIAS 59300 Valenciennes","BV":18},"geometry":{"x":3.5090970260000631,"y":50.359191578000036}},{"attributes":{"OBJECTID":19,"code":19,"libelle":"Ecole Maternelle Acacias","adresse_numero":2,"adresse_voie":"PLACE DES ACACIAS","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"2 PLACE DES ACACIAS 59300 Valenciennes","BV":19},"geometry":{"x":3.509176468000021,"y":50.359861806000026}},{"attributes":{"OBJECTID":20,"code":20,"libelle":"Ecole Maternelle Anna Foucart","adresse_numero":13,"adresse_voie":"RUE ROSALIE LEVASSEUR","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"13 RUE ROSALIE LEVASSEUR 59300 Valenciennes","BV":20},"geometry":{"x":3.5141870700000482,"y":50.368915085000026}},{"attributes":{"OBJECTID":21,"code":21,"libelle":"Pôle Educatif Chasse Royale A","adresse_numero":0,"adresse_voie":"RUE HECTOR BERLIOZ","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"0 RUE HECTOR BERLIOZ 59300 Valenciennes","BV":21},"geometry":{"x":3.4868477000000553,"y":50.354368600000043}},{"attributes":{"OBJECTID":22,"code":22,"libelle":"Pôle Educatif Chasse Royale B","adresse_numero":0,"adresse_voie":"RUE HECTOR BERLIOZ","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"0 RUE HECTOR BERLIOZ 59300 Valenciennes","BV":22},"geometry":{"x":3.4868477000000553,"y":50.354368600000043}},{"attributes":{"OBJECTID":23,"code":23,"libelle":"Salle Polyvalente La Plaine A","adresse_numero":0,"adresse_voie":"RUE DU DOMAINE","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"0 RUE DU DOMAINE 59300 Valenciennes","BV":23},"geometry":{"x":3.4907476440000664,"y":50.358837486000027}},{"attributes":{"OBJECTID":24,"code":24,"libelle":"Groupe Scolaire Jean Mineur A","adresse_numero":232,"adresse_voie":"AVENUE DESANDROUIN","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"232 AVENUE DESANDROUIN 59300 Valenciennes","BV":24},"geometry":{"x":3.4882833100000425,"y":50.364224320000062}},{"attributes":{"OBJECTID":25,"code":25,"libelle":"Salle Polyvalente La Plaine B","adresse_numero":0,"adresse_voie":"RUE DU DOMAINE","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"0 RUE DU DOMAINE 59300 Valenciennes","BV":25},"geometry":{"x":3.4907476440000664,"y":50.358837486000027}},{"attributes":{"OBJECTID":26,"code":26,"libelle":"Groupe Scolaire Jean Mineur B","adresse_numero":232,"adresse_voie":"AVENUE DESANDROUIN","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"232 AVENUE DESANDROUIN 59300 Valenciennes","BV":26},"geometry":{"x":3.4881521960000441,"y":50.364271998000049}},{"attributes":{"OBJECTID":27,"code":27,"libelle":"Salle Polyvalente Dutemple","adresse_numero":69,"adresse_voie":"RUE DE PETITE FORET","adresse_codepostal":59300,"adresse_commune_libelle":"Valenciennes","adresse_complete":"69  RUE DE PETITE FORET 59300 Valenciennes","BV":27},"geometry":{"x":3.4800261740000451,"y":50.360320656000056}}]
+}
