@@ -174,13 +174,27 @@
       color: #6b7280;
     }
 
-    .fiche-link a {
-      color: #2563eb;
-      text-decoration: none;
-      font-size: 0.86rem;
+    .fiche-link {
+      margin-top: 0.35rem;
     }
 
-    .fiche-link a:hover { text-decoration: underline; }
+    .btn-itineraire {
+      display: inline-block;
+      padding: 0.35rem 0.8rem;
+      border-radius: 999px;
+      background: #2563eb;
+      color: #ffffff;
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .btn-itineraire:hover {
+      background: #1d4ed8;
+      text-decoration: none;
+    }
 
     @media (max-width: 900px) {
       body { flex-direction: column; }
@@ -221,11 +235,41 @@
   <div id="map"></div>
 
   <script>
-    // ===== Carte =====
-    var map = L.map('map').setView([46.8, 2.5], 6);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19
-    }).addTo(map);
+    // ===== Carte (IGN si clé, sinon OSM) =====
+    // Remplace 'VOTRE_CLE_IGN_ICI' par ta clé Géoportail pour activer le fond IGN
+    var IGN_API_KEY = 'VOTRE_CLE_IGN_ICI';
+
+    var baseLayer;
+
+    if (IGN_API_KEY && IGN_API_KEY !== 'VOTRE_CLE_IGN_ICI') {
+      baseLayer = L.tileLayer(
+        'https://wxs.ign.fr/' + IGN_API_KEY +
+        '/geoportail/wmts?' +
+        'SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0' +
+        '&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2' +
+        '&STYLE=normal&TILEMATRIXSET=PM' +
+        '&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}' +
+        '&FORMAT=image%2Fpng',
+        {
+          maxZoom: 19,
+          attribution: '&copy; IGN / Géoportail'
+        }
+      );
+    } else {
+      baseLayer = L.tileLayer(
+        'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+        {
+          maxZoom: 19,
+          attribution: '&copy; OpenStreetMap contributeurs'
+        }
+      );
+    }
+
+    var map = L.map('map', {
+      center: [46.8, 2.5],
+      zoom: 6,
+      layers: [baseLayer]
+    });
     var marker = null;
 
     // ===== Données =====
@@ -275,8 +319,13 @@
             let lat = a.lat, lon = a.lon;
             if ((!lat || !lon) && f.geometry) {
               const g = f.geometry;
-              if (Array.isArray(g.coordinates)) { lon = g.coordinates[0]; lat = g.coordinates[1]; }
-              else if (typeof g.x === "number" && typeof g.y === "number") { lon = g.x; lat = g.y; }
+              if (Array.isArray(g.coordinates)) {
+                lon = g.coordinates[0];
+                lat = g.coordinates[1];
+              } else if (typeof g.x === "number" && typeof g.y === "number") {
+                lon = g.x;
+                lat = g.y;
+              }
             }
             const adresse = a.adresse;
             return {
@@ -302,8 +351,13 @@
             let lat = a.lat, lon = a.lon;
             if ((!lat || !lon) && f.geometry) {
               const g = f.geometry;
-              if (Array.isArray(g.coordinates)) { lon = g.coordinates[0]; lat = g.coordinates[1]; }
-              else if (typeof g.x === "number" && typeof g.y === "number") { lon = g.x; lat = g.y; }
+              if (Array.isArray(g.coordinates)) {
+                lon = g.coordinates[0];
+                lat = g.coordinates[1];
+              } else if (typeof g.x === "number" && typeof g.y === "number") {
+                lon = g.x;
+                lat = g.y;
+              }
             }
             return {
               BV: a.BV,
@@ -377,6 +431,7 @@
     function showFiche(d) {
       const bv = (d.BV != null) ? BUREAUX_BY_BV[d.BV] : null;
 
+      // Badge BV
       const badge = document.getElementById('badge-bv');
       if (d.BV != null) {
         badge.textContent = "BV " + d.BV;
@@ -385,17 +440,30 @@
         badge.style.display = 'none';
       }
 
+      // Infos texte
       const nomBV = (bv && bv.libelle) || d.Lieu_de_vote || "-";
       const adrBV = (bv && bv.adresse_complete) || d.Loc_BV || "-";
 
+      // URL Google Maps : depuis url_itineraire du BV ou Loc_BV si lien
       const gmapsUrl = getGoogleMapsUrl(
         (bv && bv.url_itineraire) || d.Loc_BV
       );
 
-      const linkHtml = gmapsUrl
+      // URL pour l’itinéraire : si on a lat/lon du BV, on fabrique un lien /dir
+      let directionUrl = null;
+      if (bv && bv.lat && bv.lon) {
+        directionUrl = `https://www.google.com/maps/dir/?api=1&destination=${bv.lat},${bv.lon}`;
+      } else if (gmapsUrl) {
+        directionUrl = gmapsUrl;
+      }
+
+      const boutonHtml = directionUrl
         ? `<div class="fiche-link">
-             <a href="${gmapsUrl}" target="_blank" rel="noopener noreferrer">
-               Voir le bureau de vote sur Google&nbsp;Maps
+             <a class="btn-itineraire"
+                href="${directionUrl}"
+                target="_blank"
+                rel="noopener noreferrer">
+               Itinéraire Google Maps
              </a>
            </div>`
         : "";
@@ -416,7 +484,7 @@
           <p class="fiche-line">
             <span class="fiche-label">Adresse du bureau :</span> ${adrBV}
           </p>
-          ${linkHtml}
+          ${boutonHtml}
         </div>
       `;
       document.getElementById('fiche-content').innerHTML = html;
