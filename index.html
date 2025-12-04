@@ -45,7 +45,7 @@
 
     .logo-vm {
       height: 44px;
-      max-width: 180px;
+      max-width: 190px;
       object-fit: contain;
     }
 
@@ -262,7 +262,7 @@
 <body>
   <div id="left">
     <div class="app-header">
-      <!-- Logo : mets le même nom de fichier que dans ton dépôt -->
+      <!-- Mets bien ce fichier dans ton repo -->
       <img src="logo_valenciennes_metropole.png" alt="Valenciennes Métropole" class="logo-vm" />
       <div class="app-title-block">
         <h1>Trouver mon bureau de vote</h1>
@@ -293,7 +293,7 @@
   <div id="map"></div>
 
   <script>
-    // ----- Fond de carte (OSM) -----
+    // ===================== CARTE =====================
     var baseLayer = L.tileLayer(
       "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
       { maxZoom: 19 }
@@ -307,7 +307,7 @@
 
     var marker = null;
 
-    // ----- Icône URNE BLEUE (SVG inline) -----
+    // Icône URNE BLEUE
     var voteIcon = L.icon({
       iconUrl: "data:image/svg+xml;utf8,\
 <svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>\
@@ -321,7 +321,7 @@
       popupAnchor: [0, -42]
     });
 
-    // ----- Données -----
+    // ===================== DONNÉES =====================
     let ADRESSES = [];
     let BUREAUX_BY_BV = {};
     let lastSelectedResult = null;
@@ -344,7 +344,9 @@
         const rawAddr = await addrRes.json();
         const rawBV = await bvRes.json();
 
+        // ---------- ADRESSES ----------
         if (Array.isArray(rawAddr)) {
+          // JSON = tableau simple
           ADRESSES = rawAddr.map(a => ({
             adresse: a.adresse,
             BV: a.BV,
@@ -354,26 +356,66 @@
             Loc_BV: a.Loc_BV,
             adresse_norm: normalize(a.adresse)
           }));
+        } else if (rawAddr && rawAddr.features) {
+          // JSON = FeatureCollection ArcGIS
+          ADRESSES = rawAddr.features.map(f => {
+            const a = f.attributes || f.properties || {};
+            let lat = a.lat, lon = a.lon;
+            if (f.geometry && typeof f.geometry.x === "number") {
+              lon = f.geometry.x;
+              lat = f.geometry.y;
+            }
+            return {
+              adresse: a.adresse,
+              BV: a.BV,
+              lat: lat,
+              lon: lon,
+              Lieu_de_vote: a.Lieu_de_vote,
+              Loc_BV: a.Loc_BV,
+              adresse_norm: normalize(a.adresse)
+            };
+          });
         }
 
+        // ---------- BUREAUX ----------
         if (Array.isArray(rawBV)) {
           rawBV.forEach(b => {
             if (b.BV != null) {
               BUREAUX_BY_BV[b.BV] = b;
             }
           });
+        } else if (rawBV && rawBV.features) {
+          rawBV.features.forEach(f => {
+            const a = f.attributes || f.properties || {};
+            let lat = a.lat, lon = a.lon;
+            if (f.geometry && typeof f.geometry.x === "number") {
+              lon = f.geometry.x;
+              lat = f.geometry.y;
+            }
+            if (a.BV != null) {
+              BUREAUX_BY_BV[a.BV] = {
+                BV: a.BV,
+                libelle: a.libelle,
+                adresse_complete: a.adresse_complete,
+                lat: lat,
+                lon: lon
+              };
+            }
+          });
         }
 
-        note.textContent = ADRESSES.length + " adresses chargées. Tapez au moins 3 caractères pour commencer la recherche.";
+        note.textContent =
+          ADRESSES.length +
+          " adresses chargées. Tapez au moins 3 caractères pour commencer la recherche.";
       } catch (e) {
-        console.error(e);
+        console.error("Erreur chargement JSON :", e);
         note.textContent = "Erreur lors du chargement des données.";
       }
     }
 
     loadData();
 
-    // ----- Itinéraire : position actuelle -> BV -----
+    // ===================== ITINÉRAIRE =====================
     function openItineraire(destLat, destLon) {
       if (!destLat || !destLon) return;
 
@@ -403,7 +445,7 @@
       }
     }
 
-    // ----- Surbrillance résultat -----
+    // ===================== RECHERCHE =====================
     function markSelectedResult(elem) {
       if (lastSelectedResult) {
         lastSelectedResult.classList.remove("selected");
@@ -414,7 +456,6 @@
       }
     }
 
-    // ----- Recherche + suggestions -----
     function search() {
       const q = document.getElementById("search").value.trim();
       const div = document.getElementById("results");
@@ -471,7 +512,6 @@
       searchTimer = setTimeout(search, 200);
     };
 
-    // Bouton effacer
     document.getElementById("btnClear").onclick = () => {
       document.getElementById("search").value = "";
       document.getElementById("results").innerHTML = "";
@@ -485,7 +525,7 @@
       lastSelectedResult = null;
     };
 
-    // ----- Fiche + carte -----
+    // ===================== FICHE + CARTE =====================
     function showFiche(d) {
       const badge = document.getElementById("badge-bv");
       const fiche = document.getElementById("fiche-content");
