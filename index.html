@@ -21,7 +21,7 @@
       padding: 1.25rem 1.5rem;
       box-sizing: border-box;
       background: #ffffff;
-      box-shadow: 2px 0 15px rgba(15, 23, 42, 0.06);
+      box-shadow: 2px 0 10px rgba(15, 23, 42, 0.08);
       display: flex;
       flex-direction: column;
       gap: 0.75rem;
@@ -39,7 +39,6 @@
     .subtitle {
       font-size: 0.8rem;
       color: #6b7280;
-      margin-bottom: 0.4rem;
     }
 
     .search-row {
@@ -66,29 +65,26 @@
       padding: 0.5rem 0.9rem;
       border-radius: 999px;
       border: none;
-      background: linear-gradient(135deg, #2563eb, #4f46e5);
+      background: #2563eb;
       color: white;
       font-weight: 500;
       font-size: 0.9rem;
       cursor: pointer;
       white-space: nowrap;
-      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
     }
 
     #btnSearch:hover {
-      background: linear-gradient(135deg, #1d4ed8, #4338ca);
+      background: #1d4ed8;
     }
 
     #info-note {
       font-size: 0.8rem;
       color: #6b7280;
-      margin-bottom: 0.3rem;
     }
 
     #results {
       max-height: 170px;
       overflow-y: auto;
-      margin-bottom: 0.4rem;
       border-radius: 10px;
       border: 1px solid #e5e7eb;
       background: #fafafa;
@@ -104,9 +100,7 @@
       gap: 0.35rem;
     }
 
-    .result-item:last-child {
-      border-bottom: none;
-    }
+    .result-item:last-child { border-bottom: none; }
 
     .result-item span.badge {
       background: #e5e7eb;
@@ -124,11 +118,10 @@
 
     .fiche-card {
       margin-top: 0.25rem;
-      padding: 0.85rem 0.9rem;
+      padding: 0.9rem;
       border-radius: 14px;
       border: 1px solid #e5e7eb;
-      background: linear-gradient(135deg, #f9fafb, #eef2ff);
-      box-shadow: 0 10px 25px rgba(148, 163, 184, 0.25);
+      background: #f9fafb;
     }
 
     .fiche-header {
@@ -152,7 +145,6 @@
       color: white;
       font-size: 0.75rem;
       font-weight: 600;
-      box-shadow: 0 4px 8px rgba(37, 99, 235, 0.45);
     }
 
     .fiche-section-title {
@@ -161,7 +153,7 @@
       text-transform: uppercase;
       letter-spacing: 0.08em;
       color: #6b7280;
-      margin-top: 0.2rem;
+      margin-top: 0.1rem;
       margin-bottom: 0.15rem;
     }
 
@@ -178,7 +170,7 @@
 
     .fiche-divider {
       border-top: 1px dashed #d1d5db;
-      margin: 0.45rem 0 0.5rem 0;
+      margin: 0.4rem 0 0.45rem 0;
     }
 
     .fiche-empty {
@@ -186,19 +178,13 @@
       color: #6b7280;
     }
 
-    .fiche-link {
-      font-size: 0.85rem;
-      margin-top: 0.25rem;
-    }
-
     .fiche-link a {
       color: #2563eb;
       text-decoration: none;
+      font-size: 0.86rem;
     }
 
-    .fiche-link a:hover {
-      text-decoration: underline;
-    }
+    .fiche-link a:hover { text-decoration: underline; }
 
     @media (max-width: 900px) {
       body { flex-direction: column; }
@@ -221,9 +207,7 @@
       <input id="search" type="text" placeholder="Ex : 2 Rue de la Halle" autocomplete="off">
       <button id="btnSearch">OK</button>
     </div>
-    <div id="info-note">
-      Chargement des adresses...
-    </div>
+    <div id="info-note">Chargement des adresses...</div>
 
     <div id="results"></div>
 
@@ -259,18 +243,28 @@
         .toLowerCase();
     }
 
-    // Essayeur de coordonnées depuis un lien Google Maps (Loc_BV)
-    function extractCoordsFromGoogleMapsUrl(url) {
-      if (!url || typeof url !== "string") return null;
+    // Récupère un éventuel lien Google Maps dans Loc_BV (au cas où il y a du texte autour)
+    function getGoogleMapsUrl(locBV) {
+      if (!locBV || typeof locBV !== "string") return null;
+      const m = locBV.match(/https?:\/\/\S+/);
+      return m ? m[0] : null;
+    }
 
-      // 1) Pattern @lat,lon,zoom
-      let m = url.match(/@(-?\d+(\.\d+)?),(-?\d+(\.\d+)?)/);
+    // Extrait des coordonnées (lat, lon) depuis un lien Google Maps
+    function extractCoordsFromGoogleMapsUrl(url) {
+      if (!url) return null;
+
+      // on décode pour gérer les %2C, etc.
+      const decoded = decodeURIComponent(url);
+
+      // 1) pattern @lat,lon
+      let m = decoded.match(/@(-?\d+(\.\d+)?),(-?\d+(\.\d+)?)/);
       if (m) {
         return { lat: parseFloat(m[1]), lon: parseFloat(m[3]) };
       }
 
-      // 2) Pattern ?q=lat,lon ou ?query=lat,lon
-      m = url.match(/[?&](q|query)=(-?\d+(\.\d+)?),(-?\d+(\.\d+)?)/);
+      // 2) pattern ?q=lat,lon ou ?query=lat,lon ou ?ll=lat,lon
+      m = decoded.match(/[?&](q|query|ll)=(-?\d+(\.\d+)?),(-?\d+(\.\d+)?)/);
       if (m) {
         return { lat: parseFloat(m[2]), lon: parseFloat(m[4]) };
       }
@@ -300,7 +294,6 @@
             let lat = attrs.lat;
             let lon = attrs.lon;
 
-            // Si pas de lat/lon attributs, on tente depuis la géométrie
             if ((!lat || !lon) && f.geometry) {
               const g = f.geometry;
               if (Array.isArray(g.coordinates)) {
@@ -377,7 +370,7 @@
       showFiche(matches[0]);
     }
 
-    // ===== Fiche + carte =====
+    // ===== Fiche + carte (centrée sur le BV) =====
     function showFiche(d) {
       const badge = document.getElementById('badge-bv');
       if (d.Bureau_de_vote_2025) {
@@ -387,10 +380,18 @@
         badge.style.display = 'none';
       }
 
-      // Texte fiche
-      let locHtml = d.Loc_BV ?? '-';
-      if (d.Loc_BV && typeof d.Loc_BV === 'string' && d.Loc_BV.startsWith('http')) {
-        locHtml = `<a href="${d.Loc_BV}" target="_blank" rel="noopener noreferrer">Ouvrir dans Google&nbsp;Maps</a>`;
+      const gmapsUrl = getGoogleMapsUrl(d.Loc_BV);
+      const locText = d.Loc_BV && !gmapsUrl ? d.Loc_BV : (d.Lieu_de_vote || "-");
+
+      let linkHtml = "";
+      if (gmapsUrl) {
+        linkHtml = `
+          <div class="fiche-link">
+            <a href="${gmapsUrl}" target="_blank" rel="noopener noreferrer">
+              Voir le bureau de vote sur Google&nbsp;Maps
+            </a>
+          </div>
+        `;
       }
 
       const html = `
@@ -407,25 +408,26 @@
             <span class="fiche-label">Nom du bureau :</span> ${d.Lieu_de_vote ?? '-'}
           </p>
           <p class="fiche-line">
-            <span class="fiche-label">Localisation :</span> ${locHtml}
+            <span class="fiche-label">Localisation :</span> ${locText}
           </p>
+          ${linkHtml}
         </div>
       `;
       document.getElementById('fiche-content').innerHTML = html;
 
-      // Localisation sur la carte : priorité au lien Google Maps (BV)
+      // Coordonnées BV : priorité au lien Google Maps
       let lat = null;
       let lon = null;
 
-      if (d.Loc_BV && typeof d.Loc_BV === 'string' && d.Loc_BV.startsWith('http')) {
-        const coords = extractCoordsFromGoogleMapsUrl(d.Loc_BV);
+      if (gmapsUrl) {
+        const coords = extractCoordsFromGoogleMapsUrl(gmapsUrl);
         if (coords) {
           lat = coords.lat;
           lon = coords.lon;
         }
       }
 
-      // Si pas de coordonnées dans le lien → fallback sur lat/lon attributs (si tu en as)
+      // Sinon, fallback sur lat/lon attributs si tu les as
       if ((!lat || !lon) && d.lat && d.lon) {
         lat = d.lat;
         lon = d.lon;
