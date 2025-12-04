@@ -59,17 +59,16 @@
       margin: 0;
       font-size: 1.35rem;
       font-weight: 650;
-      letter-spacing: .01em;
       color: #0f172a;
     }
 
     .subtitle {
       font-size: 0.82rem;
       color: #6b7280;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.2rem;
     }
 
-    /* Barre de recherche */
+    /* Recherche */
     .search-row {
       display: flex;
       gap: 0.45rem;
@@ -82,9 +81,9 @@
       border-radius: 999px;
       border: 1px solid #d1d5db;
       font-size: 0.95rem;
-      outline: none;
-      transition: border-color 0.16s, box-shadow 0.16s, background-color 0.16s;
       background-color: #f9fafb;
+      outline: none;
+      transition: border-color .16s, box-shadow .16s, background-color .16s;
     }
 
     #search:focus {
@@ -99,13 +98,11 @@
       cursor: pointer;
       font-size: 1rem;
       padding: 0.2rem;
-      color: #9ca3af;
-      transition: color 0.15s;
+      color: #94a3b8;
+      transition: color .15s;
     }
 
-    #btnClear:hover {
-      color: #4b5563;
-    }
+    #btnClear:hover { color: #475569; }
 
     #btnSearch {
       padding: 0.48rem 0.95rem;
@@ -123,20 +120,14 @@
       white-space: nowrap;
     }
 
-    #btnSearch:hover {
-      filter: brightness(1.05);
-    }
-
-    #btnSearch span.icon {
-      font-size: 0.95rem;
-    }
+    #btnSearch:hover { filter: brightness(1.05); }
 
     #info-note {
       font-size: 0.8rem;
       color: #6b7280;
     }
 
-    /* Liste des résultats */
+    /* Résultats */
     #results {
       max-height: 180px;
       overflow-y: auto;
@@ -153,12 +144,10 @@
       gap: 0.45rem;
       cursor: pointer;
       border-bottom: 1px solid #edf0f4;
-      transition: background-color 0.12s, padding-left 0.12s, border-left 0.12s;
+      transition: background-color .12s, padding-left .12s, border-left .12s;
     }
 
-    .result-item:last-child {
-      border-bottom: none;
-    }
+    .result-item:last-child { border-bottom: none; }
 
     .result-item:hover {
       background: #e0efff;
@@ -187,7 +176,7 @@
       text-overflow: ellipsis;
     }
 
-    /* Fiche bureau */
+    /* Fiche */
     .fiche-card {
       margin-top: 0.1rem;
       padding: 0.95rem 1rem;
@@ -208,7 +197,6 @@
       margin: 0;
       font-size: 1rem;
       font-weight: 600;
-      color: #0f172a;
     }
 
     .fiche-badge-bv {
@@ -231,30 +219,16 @@
       color: #6b7280;
     }
 
-    .fiche-line {
-      margin: 0.08rem 0;
-      font-size: 0.9rem;
-    }
-
-    .fiche-label {
-      color: #6b7280;
-      margin-right: 0.25rem;
-    }
+    .fiche-line { margin: 0.08rem 0; font-size: 0.9rem; }
+    .fiche-label { color: #6b7280; margin-right: 0.25rem; }
+    .fiche-bv-name { color: #0080FF; font-weight: 650; }
 
     .fiche-divider {
       border-top: 1px dashed #d1d5db;
       margin: 0.45rem 0 0.5rem 0;
     }
 
-    .fiche-bv-name {
-      color: #0080FF;
-      font-weight: 650;
-    }
-
-    .fiche-empty {
-      font-size: 0.86rem;
-      color: #6b7280;
-    }
+    .fiche-empty { font-size: 0.86rem; color: #6b7280; }
 
     .btn-itineraire {
       display: inline-flex;
@@ -263,7 +237,7 @@
       padding: 0.38rem 0.9rem;
       margin-top: 0.45rem;
       border-radius: 999px;
-      background: #16a34a; /* vert */
+      background: #16a34a;
       color: #ffffff;
       font-size: 0.86rem;
       font-weight: 600;
@@ -276,23 +250,10 @@
       text-decoration: none;
     }
 
-    .btn-itineraire span.icon {
-      font-size: 0.95rem;
-    }
-
     @media (max-width: 900px) {
-      body {
-        flex-direction: column;
-      }
-      #left {
-        width: 100%;
-        border-right: none;
-        border-bottom: 1px solid #e5e7eb;
-        box-shadow: 0 4px 16px rgba(15,23,42,0.08);
-      }
-      #map {
-        height: 50vh;
-      }
+      body { flex-direction: column; }
+      #left { width: 100%; border-right:none; border-bottom:1px solid #e5e7eb; }
+      #map { height: 50vh; }
     }
   </style>
 </head>
@@ -310,10 +271,7 @@
     <div class="search-row">
       <input id="search" type="text" placeholder="Ex : 2 Rue de la Halle" autocomplete="off" />
       <button id="btnClear" title="Effacer la recherche">✖</button>
-      <button id="btnSearch">
-        <span class="icon">🔍</span>
-        <span>Rechercher</span>
-      </button>
+      <button id="btnSearch"><span class="icon">🔍</span><span>Rechercher</span></button>
     </div>
 
     <div id="info-note">Chargement des adresses...</div>
@@ -333,23 +291,11 @@
   <div id="map"></div>
 
   <script>
-    // ---------- Fond de carte IGN / OSM ----------
-    var IGN_API_KEY = "VOTRE_CLE_IGN_ICI";
-
-    var baseLayer =
-      (IGN_API_KEY && IGN_API_KEY !== "VOTRE_CLE_IGN_ICI")
-        ? L.tileLayer(
-            "https://wxs.ign.fr/" + IGN_API_KEY +
-            "/geoportail/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0" +
-            "&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal" +
-            "&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}" +
-            "&FORMAT=image/png",
-            { maxZoom: 19 }
-          )
-        : L.tileLayer(
-            "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
-            { maxZoom: 19 }
-          );
+    // ----- Fond de carte (OSM) -----
+    var baseLayer = L.tileLayer(
+      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      { maxZoom: 19 }
+    );
 
     var map = L.map("map", {
       center: [46.8, 2.5],
@@ -359,7 +305,21 @@
 
     var marker = null;
 
-    // ---------- Données ----------
+    // ----- Icône URNE BLEUE (SVG inline) -----
+    var voteIcon = L.icon({
+      iconUrl: "data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>\
+<rect x='8' y='22' width='48' height='34' rx='4' ry='4' fill='%230080FF'/>\
+<rect x='20' y='10' width='24' height='16' rx='3' ry='3' fill='%230080FF'/>\
+<rect x='14' y='28' width='36' height='18' rx='2' ry='2' fill='white'/>\
+<path d='M20 18h24' stroke='white' stroke-width='4' stroke-linecap='round'/>\
+</svg>",
+      iconSize: [42, 42],
+      iconAnchor: [21, 42],
+      popupAnchor: [0, -42]
+    });
+
+    // ----- Données -----
     let ADRESSES = [];
     let BUREAUX_BY_BV = {};
     let lastSelectedResult = null;
@@ -382,60 +342,27 @@
         const rawAddr = await addrRes.json();
         const rawBV = await bvRes.json();
 
-        // --- Adresses ---
         if (Array.isArray(rawAddr)) {
           ADRESSES = rawAddr.map(a => ({
             adresse: a.adresse,
             BV: a.BV,
-            lat: a.lat, lon: a.lon,
+            lat: a.lat,
+            lon: a.lon,
             Lieu_de_vote: a.Lieu_de_vote,
             Loc_BV: a.Loc_BV,
             adresse_norm: normalize(a.adresse)
           }));
-        } else if (rawAddr && rawAddr.features) {
-          ADRESSES = rawAddr.features.map(f => {
-            const a = f.attributes || f.properties || {};
-            let lat = a.lat, lon = a.lon;
-            if (f.geometry && typeof f.geometry.x === "number") {
-              lon = f.geometry.x; lat = f.geometry.y;
-            }
-            return {
-              adresse: a.adresse,
-              BV: a.BV,
-              lat, lon,
-              Lieu_de_vote: a.Lieu_de_vote,
-              Loc_BV: a.Loc_BV,
-              adresse_norm: normalize(a.adresse)
-            };
-          });
         }
 
-        // --- Bureaux ---
-        let bureaux = [];
         if (Array.isArray(rawBV)) {
-          bureaux = rawBV;
-        } else if (rawBV && rawBV.features) {
-          bureaux = rawBV.features.map(f => {
-            const a = f.attributes || f.properties || {};
-            let lat = a.lat, lon = a.lon;
-            if (f.geometry && typeof f.geometry.x === "number") {
-              lon = f.geometry.x; lat = f.geometry.y;
+          rawBV.forEach(b => {
+            if (b.BV != null) {
+              BUREAUX_BY_BV[b.BV] = b;
             }
-            return {
-              BV: a.BV,
-              libelle: a.libelle,
-              adresse_complete: a.adresse_complete,
-              url_itineraire: a.url_itineraire,
-              lat, lon
-            };
           });
         }
-
-        BUREAUX_BY_BV = {};
-        bureaux.forEach(b => { if (b.BV != null) BUREAUX_BY_BV[b.BV] = b; });
 
         note.textContent = ADRESSES.length + " adresses chargées. Tapez au moins 3 caractères pour commencer la recherche.";
-
       } catch (e) {
         console.error(e);
         note.textContent = "Erreur lors du chargement des données.";
@@ -444,16 +371,48 @@
 
     loadData();
 
-    // ---------- Gestion surbrillance résultat ----------
+    // ----- Itinéraire : position actuelle -> BV -----
+    function openItineraire(destLat, destLon) {
+      if (!destLat || !destLon) return;
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function (pos) {
+            const oLat = pos.coords.latitude;
+            const oLon = pos.coords.longitude;
+            const url =
+              "https://www.google.com/maps/dir/?api=1" +
+              "&origin=" + oLat + "," + oLon +
+              "&destination=" + destLat + "," + destLon;
+            window.open(url, "_blank");
+          },
+          function () {
+            const url =
+              "https://www.google.com/maps/dir/?api=1" +
+              "&destination=" + destLat + "," + destLon;
+            window.open(url, "_blank");
+          }
+        );
+      } else {
+        const url =
+          "https://www.google.com/maps/dir/?api=1" +
+          "&destination=" + destLat + "," + destLon;
+        window.open(url, "_blank");
+      }
+    }
+
+    // ----- Surbrillance résultat -----
     function markSelectedResult(elem) {
       if (lastSelectedResult) {
         lastSelectedResult.classList.remove("selected");
       }
-      elem.classList.add("selected");
-      lastSelectedResult = elem;
+      if (elem) {
+        elem.classList.add("selected");
+        lastSelectedResult = elem;
+      }
     }
 
-    // ---------- Recherche ----------
+    // ----- Recherche + suggestions -----
     function search() {
       const q = document.getElementById("search").value.trim();
       const div = document.getElementById("results");
@@ -470,7 +429,7 @@
 
       if (!results.length) {
         div.innerHTML = "<div class='result-item'><span class='result-text'>Aucune adresse trouvée.</span></div>";
-        document.getElementById("fiche-content").innerHTML = "Aucun résultat.";
+        document.getElementById("fiche-content").textContent = "Aucun résultat.";
         document.getElementById("badge-bv").style.display = "none";
         return;
       }
@@ -484,16 +443,19 @@
           <span class="result-text">${r.adresse}</span>
         `;
         d.onclick = () => {
+          // écrire l'adresse choisie dans la barre de recherche
+          document.getElementById("search").value = r.adresse;
           markSelectedResult(d);
           showFiche(r);
         };
         div.appendChild(d);
       });
 
-      // Sélection par défaut du 1er résultat
+      // Sélectionner / afficher le premier résultat
       const firstItem = div.firstElementChild;
       if (firstItem) {
         markSelectedResult(firstItem);
+        document.getElementById("search").value = results[0].adresse;
       }
       showFiche(results[0]);
     }
@@ -501,7 +463,10 @@
     let searchTimer = null;
     document.getElementById("btnSearch").onclick = search;
     document.getElementById("search").onkeyup = (e) => {
-      if (e.key === "Enter") return search();
+      if (e.key === "Enter") {
+        search();
+        return;
+      }
       clearTimeout(searchTimer);
       searchTimer = setTimeout(search, 200);
     };
@@ -510,9 +475,9 @@
     document.getElementById("btnClear").onclick = () => {
       document.getElementById("search").value = "";
       document.getElementById("results").innerHTML = "";
-      document.getElementById("fiche-content").innerHTML =
-        "Saisissez une adresse pour afficher les informations associées.";
       document.getElementById("badge-bv").style.display = "none";
+      document.getElementById("fiche-content").textContent =
+        "Saisissez une adresse pour afficher les informations associées.";
       if (marker) {
         map.removeLayer(marker);
         marker = null;
@@ -520,27 +485,37 @@
       lastSelectedResult = null;
     };
 
-    // ---------- Fiche + carte ----------
+    // ----- Fiche + carte -----
     function showFiche(d) {
-      const bv = BUREAUX_BY_BV[d.BV];
-
       const badge = document.getElementById("badge-bv");
-      badge.style.display = "inline-block";
-      badge.textContent = "BV " + d.BV;
+      const fiche = document.getElementById("fiche-content");
+      const bv = (d && d.BV != null) ? BUREAUX_BY_BV[d.BV] : null;
 
-      const nomBV = (bv && bv.libelle) || d.Lieu_de_vote || "-";
-      const adrBV = (bv && bv.adresse_complete) || d.Loc_BV || "-";
+      if (!d) return;
 
-      // Itinéraire Google Maps : adresse saisie -> bureau
-      let directionUrl = null;
-      if (bv && bv.lat && bv.lon) {
-        directionUrl =
-          "https://www.google.com/maps/dir/?api=1" +
-          "&origin=" + encodeURIComponent(d.adresse || "") +
-          "&destination=" + bv.lat + "," + bv.lon;
+      // Badge BV
+      if (d.BV != null) {
+        badge.style.display = "inline-block";
+        badge.textContent = "BV " + d.BV;
+      } else {
+        badge.style.display = "none";
       }
 
-      const ficheHtml = `
+      const nomBV = bv && bv.libelle ? bv.libelle : (d.Lieu_de_vote || "-");
+      const adrBV = bv && bv.adresse_complete ? bv.adresse_complete : (d.Loc_BV || "-");
+
+      let destLat = null, destLon = null;
+      if (bv && typeof bv.lat === "number" && typeof bv.lon === "number") {
+        destLat = bv.lat;
+        destLon = bv.lon;
+      } else if (typeof d.lat === "number" && typeof d.lon === "number") {
+        destLat = d.lat;
+        destLon = d.lon;
+      }
+
+      const hasCoords = destLat != null && destLon != null;
+
+      const html = `
         <div>
           <div class="fiche-section-title">Adresse recherchée</div>
           <p class="fiche-line">
@@ -558,8 +533,10 @@
             <span class="fiche-label">Adresse du bureau :</span> ${adrBV}
           </p>
 
-          ${directionUrl ? `
-            <a class="btn-itineraire" href="${directionUrl}" target="_blank" rel="noopener noreferrer">
+          ${hasCoords ? `
+            <a class="btn-itineraire"
+               href="#"
+               onclick="openItineraire(${destLat}, ${destLon}); return false;">
               <span class="icon">📍</span>
               <span>Itinéraire Google Maps</span>
             </a>
@@ -567,23 +544,23 @@
         </div>
       `;
 
-      document.getElementById("fiche-content").innerHTML = ficheHtml;
+      fiche.innerHTML = html;
 
-      // Carte centrée sur le bureau + popup
-      let lat = bv?.lat || d.lat;
-      let lon = bv?.lon || d.lon;
-      if (lat && lon) {
-        if (marker) map.removeLayer(marker);
-        marker = L.marker([lat, lon]).addTo(map);
+      // Carte + popup
+      if (hasCoords) {
+        if (marker) {
+          map.removeLayer(marker);
+        }
+        marker = L.marker([destLat, destLon], { icon: voteIcon }).addTo(map);
 
         const popupHtml = `
-          <strong>BV ${d.BV}</strong><br/>
+          <strong>BV ${d.BV || ""}</strong><br/>
           ${nomBV}<br/>
           <span style="font-size:0.85rem;color:#4b5563;">${adrBV}</span>
         `;
         marker.bindPopup(popupHtml).openPopup();
 
-        map.setView([lat, lon], 17);
+        map.setView([destLat, destLon], 17);
       }
     }
   </script>
