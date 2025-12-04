@@ -8,7 +8,7 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-  <!-- Fuse.js pour la recherche floue -->
+  <!-- Fuse.js -->
   <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 
   <style>
@@ -29,12 +29,6 @@
       flex-direction: column;
     }
     #map { flex: 1; }
-
-    h2 {
-      margin-top: 0.2rem;
-      margin-bottom: 0.8rem;
-      font-size: 1.4rem;
-    }
 
     .search-row {
       display: flex;
@@ -59,9 +53,6 @@
       font-weight: 500;
       cursor: pointer;
     }
-    #btnSearch:hover {
-      background: #1d4ed8;
-    }
 
     #results {
       max-height: 180px;
@@ -76,121 +67,72 @@
       padding: 0.4rem 0.6rem;
       cursor: pointer;
       border-bottom: 1px solid #e5e7eb;
-      font-size: 0.9rem;
-    }
-    .result-item:last-child {
-      border-bottom: none;
     }
     .result-item:hover {
       background: #e5f0ff;
     }
 
     .fiche {
-      margin-top: 0.2rem;
       padding: 0.75rem;
       border-radius: 8px;
       border: 1px solid #e5e7eb;
       background: #f9fafb;
       font-size: 0.9rem;
     }
-    .fiche h3 {
-      margin-top: 0;
-      margin-bottom: 0.6rem;
-      font-size: 1.05rem;
-    }
-    .label {
-      font-weight: 600;
-    }
-    .small-note {
-      font-size: 0.8rem;
-      color: #6b7280;
-      margin-top: 0.4rem;
-    }
-
-    /* Responsive si l'iframe est étroite */
-    @media (max-width: 900px) {
-      body { flex-direction: column; }
-      #left { width: 100%; box-shadow: none; }
-      #map { height: 50vh; }
-    }
   </style>
 </head>
+
 <body>
   <div id="left">
     <h2>Trouver mon bureau de vote</h2>
 
     <div class="search-row">
-      <input id="search" type="text" placeholder="Saisissez votre adresse (ex : 12 rue ...)" autocomplete="off">
+      <input id="search" type="text" placeholder="Tapez votre adresse..." autocomplete="off">
       <button id="btnSearch">OK</button>
-    </div>
-    <div class="small-note">
-      Tapez votre adresse : les suggestions apparaissent automatiquement après 3 caractères.
     </div>
 
     <div id="results"></div>
 
     <div id="fiche" class="fiche">
       <h3>Fiche bureau de vote</h3>
-      <div id="fiche-content">
-        Saisissez une adresse pour afficher les informations associées.
-      </div>
+      <div id="fiche-content">Saisissez une adresse.</div>
     </div>
   </div>
 
   <div id="map"></div>
 
   <script>
-    // ======================
-    // 1. Initialisation carte
-    // ======================
-    var map = L.map('map').setView([46.8, 2.5], 6); // centre France
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19
-    }).addTo(map);
-
+    var map = L.map('map').setView([46.8, 2.5], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
     var marker = null;
 
-    // ======================
-    // 2. Chargement des données
-    // ======================
     let ADRESSES = [];
     let fuse = null;
 
     async function loadData() {
-      // le fichier doit s'appeler exactement "adresses_bv.json" dans ton repo
       const res = await fetch('adresses_bv.json');
       ADRESSES = await res.json();
 
-      // Initialisation de Fuse.js pour la recherche floue
       fuse = new Fuse(ADRESSES, {
-        keys: ['adresse', 'Loc_BV', 'Lieu_de_vo'],
-        threshold: 0.3,           // 0 = strict, 1 = très flou
+        keys: ['adresse', 'Loc_BV', 'Lieu_de_vote'],
+        threshold: 0.3,
         minMatchCharLength: 3
       });
     }
-
     loadData();
 
-    // ======================
-    // 3. Recherche (auto + bouton)
-    // ======================
-    async function doSearch(options = { showMinMsg: false }) {
+    async function doSearch() {
       const q = document.getElementById('search').value.trim();
       const resultsDiv = document.getElementById('results');
 
-      if (!fuse) return; // données pas encore chargées
-
-      if (q.length < 3) {
-        resultsDiv.innerHTML = options.showMinMsg
-          ? "<div class='result-item'>Veuillez saisir au moins 3 caractères.</div>"
-          : "";
+      if (!fuse || q.length < 3) {
+        resultsDiv.innerHTML = "";
         return;
       }
 
       const results = fuse.search(q, { limit: 30 });
       if (results.length === 0) {
-        resultsDiv.innerHTML = "<div class='result-item'>Aucune adresse trouvée.</div>";
-        document.getElementById('fiche-content').innerHTML = "Aucun résultat.";
+        resultsDiv.innerHTML = "<div class='result-item'>Aucune adresse trouvée</div>";
         return;
       }
 
@@ -204,21 +146,16 @@
         resultsDiv.appendChild(div);
       });
 
-      // fiche du premier résultat
       showFiche(results[0].item);
     }
 
-    // ======================
-    // 4. Affichage fiche + carte
-    // ======================
     function showFiche(d) {
-      const ficheHtml = `
-        <p><span class="label">Adresse :</span> ${d.adresse ?? '-'}</p>
-        <p><span class="label">Bureau de vote :</span> ${d["Bureau_de_"] ?? '-'}</p>
-        <p><span class="label">Lieu de vote :</span> ${d["Lieu_de_vo"] ?? '-'}</p>
-        <p><span class="label">Localisation du bureau de vote :</span> ${d["Loc_BV"] ?? '-'}</p>
+      document.getElementById('fiche-content').innerHTML = `
+        <p><b>Adresse :</b> ${d.adresse}</p>
+        <p><b>Bureau de vote :</b> ${d.Bureau_de_vote_2025 ?? '-'}</p>
+        <p><b>Lieu de vote :</b> ${d.Lieu_de_vote ?? '-'}</p>
+        <p><b>Localisation :</b> ${d.Loc_BV ?? '-'}</p>
       `;
-      document.getElementById('fiche-content').innerHTML = ficheHtml;
 
       if (d.lat && d.lng) {
         if (marker) map.removeLayer(marker);
@@ -227,27 +164,13 @@
       }
     }
 
-    // ======================
-    // 5. Événements (auto-complétion)
-    // ======================
-    let searchTimeout = null;
-
-    // Bouton OK
-    document.getElementById('btnSearch').addEventListener('click', function () {
-      doSearch({ showMinMsg: true });
+    let timeout = null;
+    document.getElementById('search').addEventListener('keyup', () => {
+      clearTimeout(timeout);
+      timeout = setTimeout(doSearch, 200);
     });
 
-    // Saisie clavier : suggestions automatiques
-    document.getElementById('search').addEventListener('keyup', function (e) {
-      if (e.key === 'Enter') {
-        doSearch({ showMinMsg: true });
-        return;
-      }
-      clearTimeout(searchTimeout);
-      searchTimeout = setTimeout(function () {
-        doSearch({ showMinMsg: false });
-      }, 200); // recherche 200 ms après la dernière frappe
-    });
+    document.getElementById('btnSearch').addEventListener('click', doSearch);
   </script>
 </body>
 </html>
