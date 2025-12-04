@@ -158,7 +158,7 @@
 
     async function loadData() {
       // ⚠️ si tu mets le fichier dans un sous-dossier, adapte le chemin (ex: "./data/adresses_bv.json")
-      const res = await fetch('./adresses_bv.json');
+      const res = await fetch('./adresseS_bv.json');
       ADRESSES = await res.json();
 
       // Initialisation de Fuse.js pour la recherche floue
@@ -234,3 +234,4 @@
   </script>
 </body>
 </html>
+
