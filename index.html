@@ -262,7 +262,6 @@
 <body>
   <div id="left">
     <div class="app-header">
-      <!-- Mets bien ce fichier dans ton repo -->
       <img src="logo_valenciennes_metropole.png" alt="Valenciennes Métropole" class="logo-vm" />
       <div class="app-title-block">
         <h1>Trouver mon bureau de vote</h1>
@@ -333,6 +332,7 @@
         .toLowerCase();
     }
 
+    // Charge les données en tenant compte des 2 formats possibles
     async function loadData() {
       const note = document.getElementById("info-note");
       try {
@@ -344,20 +344,27 @@
         const rawAddr = await addrRes.json();
         const rawBV = await bvRes.json();
 
+        console.log("DEBUG adresses_bv.json =", rawAddr);
+        console.log("DEBUG bureaux_bv.json  =", rawBV);
+
         // ---------- ADRESSES ----------
+        ADRESSES = []; // reset safe
+
         if (Array.isArray(rawAddr)) {
-          // JSON = tableau simple
-          ADRESSES = rawAddr.map(a => ({
-            adresse: a.adresse,
-            BV: a.BV,
-            lat: a.lat,
-            lon: a.lon,
-            Lieu_de_vote: a.Lieu_de_vote,
-            Loc_BV: a.Loc_BV,
-            adresse_norm: normalize(a.adresse)
-          }));
+          ADRESSES = rawAddr.map(a => {
+            const lat = a.lat != null ? Number(a.lat) : null;
+            const lon = a.lon != null ? Number(a.lon) : null;
+            return {
+              adresse: a.adresse,
+              BV: a.BV,
+              lat: isFinite(lat) ? lat : null,
+              lon: isFinite(lon) ? lon : null,
+              Lieu_de_vote: a.Lieu_de_vote,
+              Loc_BV: a.Loc_BV,
+              adresse_norm: normalize(a.adresse)
+            };
+          });
         } else if (rawAddr && rawAddr.features) {
-          // JSON = FeatureCollection ArcGIS
           ADRESSES = rawAddr.features.map(f => {
             const a = f.attributes || f.properties || {};
             let lat = a.lat, lon = a.lon;
@@ -365,23 +372,37 @@
               lon = f.geometry.x;
               lat = f.geometry.y;
             }
+            lat = lat != null ? Number(lat) : null;
+            lon = lon != null ? Number(lon) : null;
             return {
               adresse: a.adresse,
               BV: a.BV,
-              lat: lat,
-              lon: lon,
+              lat: isFinite(lat) ? lat : null,
+              lon: isFinite(lon) ? lon : null,
               Lieu_de_vote: a.Lieu_de_vote,
               Loc_BV: a.Loc_BV,
               adresse_norm: normalize(a.adresse)
             };
           });
+        } else {
+          console.error("Format inattendu pour adresses_bv.json :", rawAddr);
         }
 
         // ---------- BUREAUX ----------
+        BUREAUX_BY_BV = {};
+
         if (Array.isArray(rawBV)) {
           rawBV.forEach(b => {
             if (b.BV != null) {
-              BUREAUX_BY_BV[b.BV] = b;
+              const lat = b.lat != null ? Number(b.lat) : null;
+              const lon = b.lon != null ? Number(b.lon) : null;
+              BUREAUX_BY_BV[b.BV] = {
+                BV: b.BV,
+                libelle: b.libelle,
+                adresse_complete: b.adresse_complete,
+                lat: isFinite(lat) ? lat : null,
+                lon: isFinite(lon) ? lon : null
+              };
             }
           });
         } else if (rawBV && rawBV.features) {
@@ -392,21 +413,29 @@
               lon = f.geometry.x;
               lat = f.geometry.y;
             }
+            lat = lat != null ? Number(lat) : null;
+            lon = lon != null ? Number(lon) : null;
             if (a.BV != null) {
               BUREAUX_BY_BV[a.BV] = {
                 BV: a.BV,
                 libelle: a.libelle,
                 adresse_complete: a.adresse_complete,
-                lat: lat,
-                lon: lon
+                lat: isFinite(lat) ? lat : null,
+                lon: isFinite(lon) ? lon : null
               };
             }
           });
+        } else {
+          console.error("Format inattendu pour bureaux_bv.json :", rawBV);
         }
 
-        note.textContent =
-          ADRESSES.length +
-          " adresses chargées. Tapez au moins 3 caractères pour commencer la recherche.";
+        if (!ADRESSES.length) {
+          note.textContent = "0 adresse chargée. Vérifiez le fichier adresses_bv.json.";
+        } else {
+          note.textContent =
+            ADRESSES.length +
+            " adresses chargées. Tapez au moins 3 caractères pour commencer la recherche.";
+        }
       } catch (e) {
         console.error("Erreur chargement JSON :", e);
         note.textContent = "Erreur lors du chargement des données.";
@@ -459,6 +488,13 @@
     function search() {
       const q = document.getElementById("search").value.trim();
       const div = document.getElementById("results");
+
+      if (!ADRESSES.length) {
+        document.getElementById("info-note").textContent =
+          "Aucune adresse en mémoire (0 enregistrement). Vérifiez le fichier adresses_bv.json.";
+        div.innerHTML = "";
+        return;
+      }
 
       if (q.length < 3) {
         div.innerHTML = "";
@@ -527,80 +563,84 @@
 
     // ===================== FICHE + CARTE =====================
     function showFiche(d) {
-      const badge = document.getElementById("badge-bv");
-      const fiche = document.getElementById("fiche-content");
-      const bv = (d && d.BV != null) ? BUREAUX_BY_BV[d.BV] : null;
+      try {
+        const badge = document.getElementById("badge-bv");
+        const fiche = document.getElementById("fiche-content");
+        const bv = (d && d.BV != null) ? BUREAUX_BY_BV[d.BV] : null;
 
-      if (!d) return;
+        if (!d) return;
 
-      // Badge BV
-      if (d.BV != null) {
-        badge.style.display = "inline-block";
-        badge.textContent = "BV " + d.BV;
-      } else {
-        badge.style.display = "none";
-      }
-
-      const nomBV = bv && bv.libelle ? bv.libelle : (d.Lieu_de_vote || "-");
-      const adrBV = bv && bv.adresse_complete ? bv.adresse_complete : (d.Loc_BV || "-");
-
-      let destLat = null, destLon = null;
-      if (bv && typeof bv.lat === "number" && typeof bv.lon === "number") {
-        destLat = bv.lat;
-        destLon = bv.lon;
-      } else if (typeof d.lat === "number" && typeof d.lon === "number") {
-        destLat = d.lat;
-        destLon = d.lon;
-      }
-
-      const hasCoords = destLat != null && destLon != null;
-
-      const html = `
-        <div>
-          <div class="fiche-section-title">Adresse recherchée</div>
-          <p class="fiche-line">
-            <span class="fiche-label">Adresse :</span> ${d.adresse || "-"}
-          </p>
-
-          <div class="fiche-divider"></div>
-
-          <div class="fiche-section-title">Bureau de vote</div>
-          <p class="fiche-line">
-            <span class="fiche-label">Nom du bureau :</span>
-            <span class="fiche-bv-name">${nomBV}</span>
-          </p>
-          <p class="fiche-line">
-            <span class="fiche-label">Adresse du bureau :</span> ${adrBV}
-          </p>
-
-          ${hasCoords ? `
-            <a class="btn-itineraire"
-               href="#"
-               onclick="openItineraire(${destLat}, ${destLon}); return false;">
-              <span class="icon">📍</span>
-              <span>Itinéraire Google Maps</span>
-            </a>
-          ` : ""}
-        </div>
-      `;
-
-      fiche.innerHTML = html;
-
-      // Carte + popup
-      if (hasCoords) {
-        if (marker) {
-          map.removeLayer(marker);
+        // Badge BV
+        if (d.BV != null) {
+          badge.style.display = "inline-block";
+          badge.textContent = "BV " + d.BV;
+        } else {
+          badge.style.display = "none";
         }
-        marker = L.marker([destLat, destLon], { icon: voteIcon }).addTo(map);
 
-        const popupHtml = `
-          <strong>BV ${d.BV || ""}</strong><br/>
-          ${nomBV}<br/>
-          <span style="font-size:0.85rem;color:#4b5563;">${adrBV}</span>
+        const nomBV = bv && bv.libelle ? bv.libelle : (d.Lieu_de_vote || "-");
+        const adrBV = bv && bv.adresse_complete ? bv.adresse_complete : (d.Loc_BV || "-");
+
+        let destLat = null, destLon = null;
+        if (bv && typeof bv.lat === "number" && typeof bv.lon === "number") {
+          destLat = bv.lat;
+          destLon = bv.lon;
+        } else if (typeof d.lat === "number" && typeof d.lon === "number") {
+          destLat = d.lat;
+          destLon = d.lon;
+        }
+
+        const hasCoords = destLat != null && destLon != null;
+
+        const html = `
+          <div>
+            <div class="fiche-section-title">Adresse recherchée</div>
+            <p class="fiche-line">
+              <span class="fiche-label">Adresse :</span> ${d.adresse || "-"}
+            </p>
+
+            <div class="fiche-divider"></div>
+
+            <div class="fiche-section-title">Bureau de vote</div>
+            <p class="fiche-line">
+              <span class="fiche-label">Nom du bureau :</span>
+              <span class="fiche-bv-name">${nomBV}</span>
+            </p>
+            <p class="fiche-line">
+              <span class="fiche-label">Adresse du bureau :</span> ${adrBV}
+            </p>
+
+            ${hasCoords ? `
+              <a class="btn-itineraire"
+                 href="#"
+                 onclick="openItineraire(${destLat}, ${destLon}); return false;">
+                <span class="icon">📍</span>
+                <span>Itinéraire Google Maps</span>
+              </a>
+            ` : ""}
+          </div>
         `;
-        marker.bindPopup(popupHtml).openPopup();
 
-        map.setView([destLat, destLon], 17);
+        fiche.innerHTML = html;
+
+        // Carte + popup
+        if (hasCoords) {
+          if (marker) {
+            map.removeLayer(marker);
+          }
+          marker = L.marker([destLat, destLon], { icon: voteIcon }).addTo(map);
+
+          const popupHtml = `
+            <strong>BV ${d.BV || ""}</strong><br/>
+            ${nomBV}<br/>
+            <span style="font-size:0.85rem;color:#4b5563;">${adrBV}</span>
+          `;
+          marker.bindPopup(popupHtml).openPopup();
+
+          map.setView([destLat, destLon], 17);
+        }
+      } catch (err) {
+        console.error("Erreur dans showFiche :", err, d);
       }
     }
   </script>
