@@ -12,18 +12,18 @@
   <script src="https://cdn.jsdelivr.net/npm/fuse.js@6.6.2"></script>
 
   <style>
-    body { 
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; 
-      margin: 0; 
-      display: flex; 
-      height: 100vh; 
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      display: flex;
+      height: 100vh;
       background: #f5f5f7;
     }
-    #left { 
-      width: 38%; 
-      padding: 1rem 1.5rem; 
-      box-sizing: border-box; 
-      background: #ffffff; 
+    #left {
+      width: 38%;
+      padding: 1rem 1.5rem;
+      box-sizing: border-box;
+      background: #ffffff;
       box-shadow: 2px 0 8px rgba(0,0,0,0.05);
       display: flex;
       flex-direction: column;
@@ -107,7 +107,7 @@
       margin-top: 0.4rem;
     }
 
-    /* Responsive minimal au cas où l'iframe est étroite */
+    /* Responsive si l'iframe est étroite */
     @media (max-width: 900px) {
       body { flex-direction: column; }
       #left { width: 100%; box-shadow: none; }
@@ -124,7 +124,7 @@
       <button id="btnSearch">OK</button>
     </div>
     <div class="small-note">
-      Tapez votre adresse puis cliquez sur un résultat dans la liste.
+      Tapez votre adresse : les suggestions apparaissent automatiquement après 3 caractères.
     </div>
 
     <div id="results"></div>
@@ -157,41 +157,44 @@
     let fuse = null;
 
     async function loadData() {
-      // ⚠️ si tu mets le fichier dans un sous-dossier, adapte le chemin (ex: "./data/adresses_bv.json")
-      const res = await fetch('./adresseS_bv.json');
+      // le fichier doit s'appeler exactement "adresses_bv.json" dans ton repo
+      const res = await fetch('adresses_bv.json');
       ADRESSES = await res.json();
 
       // Initialisation de Fuse.js pour la recherche floue
       fuse = new Fuse(ADRESSES, {
         keys: ['adresse', 'Loc_BV', 'Lieu_de_vo'],
-        threshold: 0.3,   // 0 = strict, 1 = très flou
+        threshold: 0.3,           // 0 = strict, 1 = très flou
         minMatchCharLength: 3
       });
     }
 
-    // Appel au chargement
     loadData();
 
     // ======================
-    // 3. Recherche
+    // 3. Recherche (auto + bouton)
     // ======================
-    async function doSearch() {
+    async function doSearch(options = { showMinMsg: false }) {
       const q = document.getElementById('search').value.trim();
       const resultsDiv = document.getElementById('results');
-      resultsDiv.innerHTML = "";
 
-      if (!q || !fuse) {
-        resultsDiv.innerHTML = "<div class='result-item'>Veuillez saisir au moins 3 caractères.</div>";
+      if (!fuse) return; // données pas encore chargées
+
+      if (q.length < 3) {
+        resultsDiv.innerHTML = options.showMinMsg
+          ? "<div class='result-item'>Veuillez saisir au moins 3 caractères.</div>"
+          : "";
         return;
       }
 
-      const results = fuse.search(q, { limit: 30 }); // max 30 résultats
+      const results = fuse.search(q, { limit: 30 });
       if (results.length === 0) {
         resultsDiv.innerHTML = "<div class='result-item'>Aucune adresse trouvée.</div>";
         document.getElementById('fiche-content').innerHTML = "Aucun résultat.";
         return;
       }
 
+      resultsDiv.innerHTML = "";
       results.forEach(r => {
         const d = r.item;
         const div = document.createElement('div');
@@ -201,12 +204,12 @@
         resultsDiv.appendChild(div);
       });
 
-      // Affiche la fiche du premier résultat
+      // fiche du premier résultat
       showFiche(results[0].item);
     }
 
     // ======================
-    // 4. Affichage de la fiche et zoom carte
+    // 4. Affichage fiche + carte
     // ======================
     function showFiche(d) {
       const ficheHtml = `
@@ -225,13 +228,26 @@
     }
 
     // ======================
-    // 5. Gestion des événements
+    // 5. Événements (auto-complétion)
     // ======================
-    document.getElementById('btnSearch').addEventListener('click', doSearch);
-    document.getElementById('search').addEventListener('keyup', function(e) {
-      if (e.key === 'Enter') doSearch();
+    let searchTimeout = null;
+
+    // Bouton OK
+    document.getElementById('btnSearch').addEventListener('click', function () {
+      doSearch({ showMinMsg: true });
+    });
+
+    // Saisie clavier : suggestions automatiques
+    document.getElementById('search').addEventListener('keyup', function (e) {
+      if (e.key === 'Enter') {
+        doSearch({ showMinMsg: true });
+        return;
+      }
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(function () {
+        doSearch({ showMinMsg: false });
+      }, 200); // recherche 200 ms après la dernière frappe
     });
   </script>
 </body>
 </html>
-
