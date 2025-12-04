@@ -13,93 +13,200 @@
       margin: 0;
       display: flex;
       height: 100vh;
-      background: #f5f5f7;
+      background: #f3f4f6;
     }
+
     #left {
       width: 38%;
-      padding: 1rem 1.5rem;
+      padding: 1.25rem 1.5rem;
       box-sizing: border-box;
       background: #ffffff;
-      box-shadow: 2px 0 8px rgba(0,0,0,0.05);
+      box-shadow: 2px 0 15px rgba(15, 23, 42, 0.06);
       display: flex;
       flex-direction: column;
+      gap: 0.75rem;
     }
+
     #map { flex: 1; }
 
     h2 {
-      margin-top: 0.2rem;
-      margin-bottom: 0.4rem;
+      margin: 0;
       font-size: 1.4rem;
+      font-weight: 600;
+      color: #111827;
+    }
+
+    .subtitle {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-bottom: 0.4rem;
     }
 
     .search-row {
       display: flex;
       gap: 0.5rem;
-      margin-bottom: 0.4rem;
     }
 
     #search {
       flex: 1;
-      padding: 0.5rem 0.6rem;
-      border-radius: 6px;
-      border: 1px solid #ccc;
+      padding: 0.55rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
       font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    #search:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
     }
 
     #btnSearch {
-      padding: 0.5rem 0.8rem;
-      border-radius: 6px;
+      padding: 0.5rem 0.9rem;
+      border-radius: 999px;
       border: none;
-      background: #2563eb;
+      background: linear-gradient(135deg, #2563eb, #4f46e5);
       color: white;
       font-weight: 500;
+      font-size: 0.9rem;
       cursor: pointer;
+      white-space: nowrap;
+      box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
     }
-    #btnSearch:hover { background: #1d4ed8; }
+
+    #btnSearch:hover {
+      background: linear-gradient(135deg, #1d4ed8, #4338ca);
+    }
 
     #info-note {
       font-size: 0.8rem;
       color: #6b7280;
-      margin-top: 0.1rem;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.3rem;
     }
 
     #results {
-      max-height: 180px;
+      max-height: 170px;
       overflow-y: auto;
-      margin-bottom: 0.8rem;
-      border-radius: 6px;
+      margin-bottom: 0.4rem;
+      border-radius: 10px;
       border: 1px solid #e5e7eb;
       background: #fafafa;
     }
 
     .result-item {
-      padding: 0.4rem 0.6rem;
+      padding: 0.45rem 0.7rem;
       cursor: pointer;
       border-bottom: 1px solid #e5e7eb;
       font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
     }
-    .result-item:last-child { border-bottom: none; }
-    .result-item:hover { background: #e5f0ff; }
 
-    .fiche {
-      margin-top: 0.2rem;
-      padding: 0.75rem;
-      border-radius: 8px;
+    .result-item:last-child {
+      border-bottom: none;
+    }
+
+    .result-item span.badge {
+      background: #e5e7eb;
+      border-radius: 999px;
+      padding: 0.05rem 0.45rem;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #4b5563;
+    }
+
+    .result-item:hover {
+      background: #e0ecff;
+    }
+
+    .fiche-card {
+      margin-top: 0.25rem;
+      padding: 0.85rem 0.9rem;
+      border-radius: 14px;
       border: 1px solid #e5e7eb;
-      background: #f9fafb;
-      font-size: 0.9rem;
+      background: linear-gradient(135deg, #f9fafb, #eef2ff);
+      box-shadow: 0 10px 25px rgba(148, 163, 184, 0.25);
     }
-    .fiche h3 {
-      margin-top: 0;
-      margin-bottom: 0.6rem;
-      font-size: 1.05rem;
+
+    .fiche-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
     }
-    .label { font-weight: 600; }
+
+    .fiche-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #111827;
+      margin: 0;
+    }
+
+    .fiche-badge-bv {
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      background: #1d4ed8;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 600;
+      box-shadow: 0 4px 8px rgba(37, 99, 235, 0.45);
+    }
+
+    .fiche-section-title {
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #6b7280;
+      margin-top: 0.2rem;
+      margin-bottom: 0.15rem;
+    }
+
+    .fiche-line {
+      font-size: 0.88rem;
+      color: #111827;
+      margin: 0.05rem 0;
+    }
+
+    .fiche-label {
+      color: #6b7280;
+      margin-right: 0.25rem;
+    }
+
+    .fiche-divider {
+      border-top: 1px dashed #d1d5db;
+      margin: 0.45rem 0 0.5rem 0;
+    }
+
+    .fiche-empty {
+      font-size: 0.86rem;
+      color: #6b7280;
+    }
+
+    .fiche-link {
+      font-size: 0.85rem;
+      margin-top: 0.25rem;
+    }
+
+    .fiche-link a {
+      color: #2563eb;
+      text-decoration: none;
+    }
+
+    .fiche-link a:hover {
+      text-decoration: underline;
+    }
 
     @media (max-width: 900px) {
       body { flex-direction: column; }
-      #left { width: 100%; box-shadow: none; }
+      #left {
+        width: 100%;
+        box-shadow: none;
+        border-bottom: 1px solid #e5e7eb;
+      }
       #map { height: 50vh; }
     }
   </style>
@@ -108,6 +215,7 @@
 <body>
   <div id="left">
     <h2>Trouver mon bureau de vote</h2>
+    <div class="subtitle">Saisissez votre adresse pour connaître votre bureau de vote.</div>
 
     <div class="search-row">
       <input id="search" type="text" placeholder="Ex : 2 Rue de la Halle" autocomplete="off">
@@ -119,9 +227,12 @@
 
     <div id="results"></div>
 
-    <div class="fiche">
-      <h3>Fiche bureau de vote</h3>
-      <div id="fiche-content">
+    <div class="fiche-card">
+      <div class="fiche-header">
+        <h3 class="fiche-title">Fiche bureau de vote</h3>
+        <span id="badge-bv" class="fiche-badge-bv" style="display:none;"></span>
+      </div>
+      <div id="fiche-content" class="fiche-empty">
         Saisissez une adresse pour afficher les informations associées.
       </div>
     </div>
@@ -138,14 +249,33 @@
     var marker = null;
 
     // ===== Données =====
-    let ADRESSES = [];   // tableau d'objets { adresse, Bureau_de_vote_2025, Loc_BV, Lieu_de_vote, lat, lon, adresse_norm }
+    let ADRESSES = [];
 
     function normalizeText(s) {
       return (s || "")
         .toString()
         .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")  // enlève accents
+        .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase();
+    }
+
+    // Essayeur de coordonnées depuis un lien Google Maps (Loc_BV)
+    function extractCoordsFromGoogleMapsUrl(url) {
+      if (!url || typeof url !== "string") return null;
+
+      // 1) Pattern @lat,lon,zoom
+      let m = url.match(/@(-?\d+(\.\d+)?),(-?\d+(\.\d+)?)/);
+      if (m) {
+        return { lat: parseFloat(m[1]), lon: parseFloat(m[3]) };
+      }
+
+      // 2) Pattern ?q=lat,lon ou ?query=lat,lon
+      m = url.match(/[?&](q|query)=(-?\d+(\.\d+)?),(-?\d+(\.\d+)?)/);
+      if (m) {
+        return { lat: parseFloat(m[2]), lon: parseFloat(m[4]) };
+      }
+
+      return null;
     }
 
     async function loadData() {
@@ -154,7 +284,6 @@
         const res = await fetch('adresses_bv.json');
         const raw = await res.json();
 
-        // Cas 1 : tableau simple
         if (Array.isArray(raw)) {
           ADRESSES = raw.map(d => ({
             adresse: d.adresse,
@@ -165,21 +294,19 @@
             lon: d.lon,
             adresse_norm: normalizeText(d.adresse)
           }));
-        }
-        // Cas 2 : JSON ArcGIS / GeoJSON avec "features"
-        else if (raw && Array.isArray(raw.features)) {
+        } else if (raw && Array.isArray(raw.features)) {
           ADRESSES = raw.features.map(f => {
             const attrs = f.attributes || f.properties || {};
             let lat = attrs.lat;
             let lon = attrs.lon;
 
-            // si pas de lat/lon attributs, on tente depuis la géométrie
+            // Si pas de lat/lon attributs, on tente depuis la géométrie
             if ((!lat || !lon) && f.geometry) {
               const g = f.geometry;
-              if (Array.isArray(g.coordinates)) {       // GeoJSON
+              if (Array.isArray(g.coordinates)) {
                 lon = g.coordinates[0];
                 lat = g.coordinates[1];
-              } else if (typeof g.x === "number" && typeof g.y === "number") { // Esri JSON
+              } else if (typeof g.x === "number" && typeof g.y === "number") {
                 lon = g.x;
                 lat = g.y;
               }
@@ -227,12 +354,14 @@
 
       const qNorm = normalizeText(q);
 
-      const matches = ADRESSES.filter(d => d.adresse_norm && d.adresse_norm.includes(qNorm))
-                              .slice(0, 30);
+      const matches = ADRESSES
+        .filter(d => d.adresse_norm && d.adresse_norm.includes(qNorm))
+        .slice(0, 30);
 
       if (matches.length === 0) {
         resultsDiv.innerHTML = "<div class='result-item'>Aucune adresse trouvée.</div>";
         document.getElementById('fiche-content').textContent = "Aucun résultat.";
+        document.getElementById('badge-bv').style.display = 'none';
         return;
       }
 
@@ -240,28 +369,72 @@
       matches.forEach(d => {
         const div = document.createElement('div');
         div.className = 'result-item';
-        div.textContent = d.adresse;
+        div.innerHTML = `<span class="badge">${d.Bureau_de_vote_2025 || "BV"}</span> <span>${d.adresse}</span>`;
         div.onclick = () => showFiche(d);
         resultsDiv.appendChild(div);
       });
 
-      showFiche(matches[0]); // affiche la première par défaut
+      showFiche(matches[0]);
     }
 
-    // ===== Affichage fiche + carte =====
+    // ===== Fiche + carte =====
     function showFiche(d) {
+      const badge = document.getElementById('badge-bv');
+      if (d.Bureau_de_vote_2025) {
+        badge.textContent = d.Bureau_de_vote_2025;
+        badge.style.display = 'inline-block';
+      } else {
+        badge.style.display = 'none';
+      }
+
+      // Texte fiche
+      let locHtml = d.Loc_BV ?? '-';
+      if (d.Loc_BV && typeof d.Loc_BV === 'string' && d.Loc_BV.startsWith('http')) {
+        locHtml = `<a href="${d.Loc_BV}" target="_blank" rel="noopener noreferrer">Ouvrir dans Google&nbsp;Maps</a>`;
+      }
+
       const html = `
-        <p><span class="label">Adresse :</span> ${d.adresse ?? '-'}</p>
-        <p><span class="label">Bureau de vote :</span> ${d.Bureau_de_vote_2025 ?? '-'}</p>
-        <p><span class="label">Lieu de vote :</span> ${d.Lieu_de_vote ?? '-'}</p>
-        <p><span class="label">Localisation du bureau de vote :</span> ${d.Loc_BV ?? '-'}</p>
+        <div>
+          <div class="fiche-section-title">Adresse recherchée</div>
+          <p class="fiche-line">
+            <span class="fiche-label">Adresse :</span> ${d.adresse ?? '-'}
+          </p>
+
+          <div class="fiche-divider"></div>
+
+          <div class="fiche-section-title">Bureau de vote</div>
+          <p class="fiche-line">
+            <span class="fiche-label">Nom du bureau :</span> ${d.Lieu_de_vote ?? '-'}
+          </p>
+          <p class="fiche-line">
+            <span class="fiche-label">Localisation :</span> ${locHtml}
+          </p>
+        </div>
       `;
       document.getElementById('fiche-content').innerHTML = html;
 
-      if (d.lat && d.lon) {
+      // Localisation sur la carte : priorité au lien Google Maps (BV)
+      let lat = null;
+      let lon = null;
+
+      if (d.Loc_BV && typeof d.Loc_BV === 'string' && d.Loc_BV.startsWith('http')) {
+        const coords = extractCoordsFromGoogleMapsUrl(d.Loc_BV);
+        if (coords) {
+          lat = coords.lat;
+          lon = coords.lon;
+        }
+      }
+
+      // Si pas de coordonnées dans le lien → fallback sur lat/lon attributs (si tu en as)
+      if ((!lat || !lon) && d.lat && d.lon) {
+        lat = d.lat;
+        lon = d.lon;
+      }
+
+      if (lat && lon) {
         if (marker) map.removeLayer(marker);
-        marker = L.marker([d.lat, d.lon]).addTo(map);
-        map.setView([d.lat, d.lon], 17);
+        marker = L.marker([lat, lon]).addTo(map);
+        map.setView([lat, lon], 17);
       }
     }
 
@@ -270,7 +443,7 @@
 
     document.getElementById('btnSearch').addEventListener('click', search);
 
-    document.getElementById('search').addEventListener('keyup', function(e) {
+    document.getElementById('search').addEventListener('keyup', function (e) {
       if (e.key === 'Enter') {
         search();
         return;
