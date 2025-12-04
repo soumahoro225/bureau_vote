@@ -36,28 +36,28 @@
 
     #map { flex: 1; }
 
+    /* Header avec logo */
     .app-header {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.9rem;
     }
 
-    .app-icon {
-      width: 38px;
-      height: 38px;
-      border-radius: 999px;
+    .logo-vm {
+      height: 44px;
+      max-width: 180px;
+      object-fit: contain;
+    }
+
+    .app-title-block {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(135deg, #0080FF, #4ba9ff);
-      color: #f9fafb;
-      font-size: 1.1rem;
-      box-shadow: 0 6px 14px rgba(0,128,255,0.40);
+      flex-direction: column;
+      gap: 0.15rem;
     }
 
     h1 {
       margin: 0;
-      font-size: 1.35rem;
+      font-size: 1.3rem;
       font-weight: 650;
       color: #0f172a;
     }
@@ -65,7 +65,7 @@
     .subtitle {
       font-size: 0.82rem;
       color: #6b7280;
-      margin-bottom: 0.2rem;
+      margin: 0;
     }
 
     /* Recherche */
@@ -254,6 +254,7 @@
       body { flex-direction: column; }
       #left { width: 100%; border-right:none; border-bottom:1px solid #e5e7eb; }
       #map { height: 50vh; }
+      .logo-vm { height: 38px; }
     }
   </style>
 </head>
@@ -261,8 +262,9 @@
 <body>
   <div id="left">
     <div class="app-header">
-      <div class="app-icon">🗳️</div>
-      <div>
+      <!-- Logo : mets le même nom de fichier que dans ton dépôt -->
+      <img src="logo_valenciennes_metropole.png" alt="Valenciennes Métropole" class="logo-vm" />
+      <div class="app-title-block">
         <h1>Trouver mon bureau de vote</h1>
         <p class="subtitle">Saisissez votre adresse pour connaître votre bureau de vote et l’itinéraire.</p>
       </div>
@@ -443,15 +445,13 @@
           <span class="result-text">${r.adresse}</span>
         `;
         d.onclick = () => {
-          // écrire l'adresse choisie dans la barre de recherche
-          document.getElementById("search").value = r.adresse;
+          document.getElementById("search").value = r.adresse;  // remplir la barre
           markSelectedResult(d);
           showFiche(r);
         };
         div.appendChild(d);
       });
 
-      // Sélectionner / afficher le premier résultat
       const firstItem = div.firstElementChild;
       if (firstItem) {
         markSelectedResult(firstItem);
