@@ -20,65 +20,64 @@
       --va-gris-2: #F6F7FB;
     }
 
-    body {
-      margin: 0;
-      height: 100vh;
-      display: flex;
+    html, body { height: 100%; }
+
+    body{
+      margin:0;
+      height:100vh;
+      display:flex;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: radial-gradient(circle at top left, #e1f0ff 0, #f5f7fb 45%, #ffffff 100%);
       color: var(--va-texte);
+      overflow: hidden;
     }
 
-    /* ================= Panneau gauche ================= */
-    #left {
+    /* ===== Layout ===== */
+    #left{
       width: 40%;
       min-width: 340px;
-      padding: 1.2rem 1.35rem;
+      padding: 1rem 1.2rem;
       background: rgba(255,255,255,0.98);
       border-right: 1px solid var(--va-gris);
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
+      display:flex;
+      flex-direction:column;
+      gap:0.85rem;
       box-shadow: 4px 0 18px rgba(15,23,42,0.06);
       z-index: 10;
+      overflow: auto;
     }
 
-    #map { flex: 1; }
+    #map{
+      flex: 1;
+      min-width: 0;
+    }
 
-    /* ================= BANNIÈRE GRAND PUBLIC ================= */
+    /* ===== Bannière compacte (anti-vide) ===== */
     .vote-banner{
       border-radius:18px;
       overflow:hidden;
-      border: 1px solid var(--va-gris);
-      background:#ffffff;
+      border:1px solid var(--va-gris);
+      background:#fff;
       box-shadow: 0 12px 28px rgba(15,23,42,0.10);
     }
 
     .banner-visual{
-      height:115px;
+      height: 68px; /* <-- compact */
+      width:100%;
     }
 
-    .banner-visual svg{
-      width:100%;
-      height:100%;
-      display:block;
-    }
+    .banner-visual svg{ width:100%; height:100%; display:block; }
 
     .banner-content{
       padding: 0.75rem 0.9rem 0.85rem;
     }
 
-    .banner-title{
-      display:flex;
-      flex-direction:column;
-      gap:0;
-    }
-
     .banner-title-main{
-      font-size: 1.55rem;
+      font-size: 1.65rem;
       font-weight: 900;
       letter-spacing: -0.01em;
       line-height: 1.15;
+      margin:0;
     }
 
     .banner-message{
@@ -87,195 +86,595 @@
       border: 1px solid rgba(11,109,192,0.16);
       border-radius: 14px;
       padding: 0.6rem 0.75rem;
-      font-size: 0.98rem;
+      font-size: 1rem;
       font-weight: 800;
       line-height: 1.25;
+      word-break: break-word;
     }
 
-    /* ================= Recherche ================= */
-    .search-row {
-      display: flex;
-      gap: 0.45rem;
-      align-items: center;
-      padding: 0.55rem;
-      border-radius: 16px;
-      border: 1px solid var(--va-gris);
-      background: #ffffff;
+    /* ===== Recherche ===== */
+    .search-row{
+      display:flex;
+      gap:0.45rem;
+      align-items:center;
+      padding:0.55rem;
+      border-radius:16px;
+      border:1px solid var(--va-gris);
+      background:#fff;
       box-shadow: 0 10px 22px rgba(15,23,42,0.05);
     }
 
-    #search {
-      flex: 1;
-      padding: 0.6rem 0.75rem;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      font-size: 0.95rem;
-      outline: none;
+    #search{
+      flex:1;
+      padding:0.6rem 0.75rem;
+      border-radius:999px;
+      border:1px solid transparent;
+      font-size:0.95rem;
+      outline:none;
+      background: transparent;
     }
 
-    #search:focus {
+    #search:focus{
       border-color: var(--va-cerise);
       box-shadow: 0 0 0 2px rgba(227,52,84,0.18);
+      background:#fff;
     }
 
-    #btnClear {
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      font-size: 1rem;
-      color: #94a3b8;
+    #btnClear{
+      border:none;
+      background:transparent;
+      cursor:pointer;
+      font-size:1.1rem;
+      color:#94a3b8;
+      padding:0.2rem 0.35rem;
     }
 
-    #btnSearch {
-      padding: 0.55rem 1.05rem;
-      border-radius: 999px;
-      border: none;
+    #btnClear:hover{ color:#475569; }
+
+    #btnSearch{
+      padding:0.55rem 1.05rem;
+      border-radius:999px;
+      border:none;
       background: linear-gradient(135deg, var(--va-cerise), #c81f44);
-      color: #ffffff;
-      font-size: 0.92rem;
-      font-weight: 800;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.3rem;
+      color:#fff;
+      font-size:0.92rem;
+      font-weight: 900;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:0.35rem;
+      white-space: nowrap;
+      box-shadow: 0 6px 16px rgba(227,52,84,0.25);
     }
 
-    #info-note {
-      font-size: 0.82rem;
-      color: #6b7280;
+    #btnSearch:hover{ filter: brightness(1.03); }
+
+    #info-note{
+      font-size:0.82rem;
+      color:#6b7280;
+      margin-top: 0.1rem;
     }
 
-    /* ================= Résultats ================= */
-    #results {
+    /* ===== Résultats ===== */
+    #results{
       max-height: 180px;
-      overflow-y: auto;
-      border-radius: 12px;
-      border: 1px solid var(--va-gris);
+      overflow-y:auto;
+      border-radius:12px;
+      border:1px solid var(--va-gris);
       background: var(--va-gris-2);
     }
 
-    .result-item {
-      padding: 0.5rem 0.75rem;
-      font-size: 0.92rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      cursor: pointer;
+    .result-item{
+      padding:0.5rem 0.75rem;
+      font-size:0.92rem;
+      display:flex;
+      align-items:center;
+      gap:0.5rem;
+      cursor:pointer;
       border-bottom: 1px solid #edf0f4;
+      transition: background-color .12s, padding-left .12s, border-left .12s;
     }
+    .result-item:last-child{ border-bottom:none; }
 
-    .result-item:hover {
+    .result-item:hover{
       background: rgba(11,109,192,0.08);
+      padding-left: 0.9rem;
     }
 
-    .result-badge {
-      font-size: 0.72rem;
-      padding: 0.12rem 0.6rem;
-      border-radius: 999px;
+    .result-item.selected{
+      background: rgba(11,109,192,0.12);
+      padding-left: 0.95rem;
+      border-left: 3px solid var(--va-bleu);
+    }
+
+    .result-badge{
+      font-size:0.72rem;
+      padding:0.12rem 0.6rem;
+      border-radius:999px;
       background: rgba(11,109,192,0.10);
       color: var(--va-bleu);
-      font-weight: 800;
+      font-weight: 900;
       white-space: nowrap;
     }
 
-    /* ================= Fiche ================= */
-    .fiche-card {
+    .result-text{
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* ===== Fiche ===== */
+    .fiche-card{
       padding: 1rem;
-      border-radius: 14px;
-      border: 1px solid var(--va-gris);
-      background: #ffffff;
+      border-radius:14px;
+      border:1px solid var(--va-gris);
+      background:#fff;
       box-shadow: 0 10px 22px rgba(15,23,42,0.04);
     }
 
-    .fiche-header {
-      display: flex;
+    .fiche-header{
+      display:flex;
       justify-content: space-between;
-      align-items: center;
+      align-items:center;
+      gap:0.6rem;
+      margin-bottom:0.5rem;
     }
 
-    .fiche-badge-bv {
-      padding: 0.3rem 0.9rem;
-      border-radius: 999px;
-      background: var(--va-bleu);
-      color: #ffffff;
+    .fiche-title{
+      margin:0;
+      font-size:1rem;
       font-weight: 900;
     }
 
-    .btn-itineraire {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      padding: 0.45rem 0.95rem;
-      margin-top: 0.55rem;
-      border-radius: 999px;
+    .fiche-badge-bv{
+      padding:0.3rem 0.9rem;
+      border-radius:999px;
       background: var(--va-bleu);
-      color: #ffffff;
-      font-weight: 800;
-      text-decoration: none;
+      color:#fff;
+      font-weight: 900;
+      white-space: nowrap;
+      display:none;
     }
 
-    @media (max-width: 900px) {
-      body { flex-direction: column; }
-      #left { width: 100%; }
-      #map { height: 50vh; }
-      .banner-title-main{ font-size: 1.35rem; }
+    .fiche-section-title{
+      margin-top: 0.2rem;
+      font-size:0.76rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.09em;
+      color:#6b7280;
+    }
+
+    .fiche-line{ margin:0.12rem 0; font-size:0.92rem; }
+    .fiche-label{ color:#6b7280; margin-right:0.25rem; }
+    .fiche-bv-name{ color: var(--va-bleu); font-weight: 900; }
+
+    .fiche-divider{
+      border-top:1px dashed #d1d5db;
+      margin:0.55rem 0 0.6rem 0;
+    }
+
+    .btn-itineraire{
+      display:inline-flex;
+      align-items:center;
+      gap:0.3rem;
+      padding:0.45rem 0.95rem;
+      margin-top:0.55rem;
+      border-radius:999px;
+      background: var(--va-bleu);
+      color:#fff;
+      font-weight: 900;
+      text-decoration:none;
+      box-shadow: 0 6px 16px rgba(11,109,192,0.20);
+    }
+
+    .btn-itineraire:hover{ filter: brightness(1.03); }
+
+    /* Mobile */
+    @media (max-width: 900px){
+      body{ flex-direction: column; }
+      #left{ width:100%; border-right:none; border-bottom:1px solid var(--va-gris); }
+      #map{ height: 50vh; flex: none; }
+      .banner-title-main{ font-size: 1.4rem; }
+      .banner-visual{ height: 60px; }
     }
   </style>
 </head>
 
 <body>
-<div id="left">
+  <div id="left">
 
-  <!-- ===== BANNIÈRE ===== -->
-  <div class="vote-banner">
-    <div class="banner-visual">
-      <svg viewBox="0 0 1200 160" preserveAspectRatio="xMidYMid slice">
-        <defs>
-          <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0" stop-color="#F2F7FF"/>
-            <stop offset="1" stop-color="#FFFFFF"/>
-          </linearGradient>
-        </defs>
-        <rect width="1200" height="160" fill="url(#bg)"/>
-      </svg>
-    </div>
+    <!-- ===== BANNIÈRE (compacte + texte non coupé) ===== -->
+    <div class="vote-banner">
+      <div class="banner-visual" aria-hidden="true">
+        <svg viewBox="0 0 1200 160" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id="bgTop" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#F2F7FF"/>
+              <stop offset="1" stop-color="#FFFFFF"/>
+            </linearGradient>
+            <linearGradient id="blueVA" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#0B6DC0"/>
+              <stop offset="1" stop-color="#2B8AE0"/>
+            </linearGradient>
+            <linearGradient id="pinkVA" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#E33454"/>
+              <stop offset="1" stop-color="#C81F44"/>
+            </linearGradient>
+          </defs>
 
-    <div class="banner-content">
-      <div class="banner-title">
-        <div class="banner-title-main">Trouver votre bureau de vote</div>
+          <rect width="1200" height="160" fill="url(#bgTop)"/>
+          <circle cx="1080" cy="40" r="55" fill="#EAF3FF"/>
+          <circle cx="980" cy="115" r="70" fill="#F0F7FF"/>
+
+          <!-- petite icône à gauche -->
+          <g transform="translate(30,26)">
+            <rect x="0" y="0" width="130" height="108" rx="16" fill="#FFFFFF" stroke="#E5E7EB"/>
+
+            <rect x="44" y="54" width="48" height="46" rx="10" fill="url(#blueVA)"/>
+            <rect x="52" y="38" width="32" height="24" rx="8" fill="url(#blueVA)"/>
+            <rect x="48" y="64" width="40" height="20" rx="8" fill="#FFFFFF"/>
+            <path d="M54 48h28" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+
+            <rect x="14" y="22" width="6" height="76" rx="4" fill="#0F172A" opacity="0.22"/>
+            <circle cx="17" cy="18" r="7" fill="#0F172A" opacity="0.22"/>
+            <polygon points="20,32 62,46 20,60" fill="url(#pinkVA)"/>
+            <text x="25" y="50" fill="#FFFFFF" font-size="14" font-weight="900"
+                  font-family="system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
+                  transform="rotate(-6 25 50)">VOTE</text>
+          </g>
+        </svg>
       </div>
-      <div class="banner-message">
-        👉 Entrez votre adresse : on vous indique votre bureau de vote et le chemin.
+
+      <div class="banner-content">
+        <h1 class="banner-title-main">Trouver votre bureau de vote</h1>
+        <div class="banner-message">👉 Entrez votre adresse : on vous indique votre bureau de vote et le chemin.</div>
       </div>
     </div>
-  </div>
 
-  <!-- ===== RECHERCHE ===== -->
-  <div class="search-row">
-    <input id="search" type="text" placeholder="Ex : 2 Rue de la Halle" />
-    <button id="btnClear">✖</button>
-    <button id="btnSearch">🔍 Rechercher</button>
-  </div>
-
-  <div id="info-note">Chargement des adresses...</div>
-  <div id="results"></div>
-
-  <!-- ===== FICHE ===== -->
-  <div class="fiche-card">
-    <div class="fiche-header">
-      <strong>Fiche bureau de vote</strong>
-      <span id="badge-bv" class="fiche-badge-bv" style="display:none;"></span>
+    <!-- ===== Recherche ===== -->
+    <div class="search-row">
+      <input id="search" type="text" placeholder="Ex : 2 Rue de la Halle" autocomplete="off" />
+      <button id="btnClear" title="Effacer la recherche">✖</button>
+      <button id="btnSearch"><span>🔍</span><span>Rechercher</span></button>
     </div>
-    <div id="fiche-content">Saisissez une adresse pour afficher les informations.</div>
+
+    <div id="info-note">Chargement des adresses...</div>
+    <div id="results"></div>
+
+    <!-- ===== Fiche ===== -->
+    <div class="fiche-card">
+      <div class="fiche-header">
+        <h2 class="fiche-title">Fiche bureau de vote</h2>
+        <span id="badge-bv" class="fiche-badge-bv"></span>
+      </div>
+      <div id="fiche-content" style="color:#6b7280;">
+        Saisissez une adresse pour afficher les informations associées.
+      </div>
+    </div>
+
   </div>
-</div>
 
-<div id="map"></div>
+  <div id="map"></div>
 
-<script>
-  // === JS IDENTIQUE À TA VERSION ACTUELLE ===
-  // Aucun changement ici pour éviter toute casse
-</script>
+  <script>
+    // ===================== CARTE =====================
+    var baseLayer = L.tileLayer(
+      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      { maxZoom: 19 }
+    );
 
+    var map = L.map("map", {
+      center: [50.357, 3.523], // Valenciennes approx (peut rester large)
+      zoom: 12,
+      layers: [baseLayer],
+    });
+
+    // Fix affichage quand le layout est en flex
+    setTimeout(function(){ map.invalidateSize(); }, 250);
+
+    var marker = null;
+
+    // Icône URNE BLEUE (bleu Valenciennes)
+    var voteIcon = L.icon({
+      iconUrl: "data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>\
+<rect x='8' y='22' width='48' height='34' rx='4' ry='4' fill='%230B6DC0'/>\
+<rect x='20' y='10' width='24' height='16' rx='3' ry='3' fill='%230B6DC0'/>\
+<rect x='14' y='28' width='36' height='18' rx='2' ry='2' fill='white'/>\
+<path d='M20 18h24' stroke='white' stroke-width='4' stroke-linecap='round'/>\
+</svg>",
+      iconSize: [42, 42],
+      iconAnchor: [21, 42],
+      popupAnchor: [0, -42]
+    });
+
+    // ===================== DONNÉES =====================
+    let ADRESSES = [];
+    let BUREAUX_BY_BV = {};
+    let lastSelectedResult = null;
+
+    function normalize(s) {
+      return (s || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
+    }
+
+    async function loadData() {
+      const note = document.getElementById("info-note");
+      try {
+        const [addrRes, bvRes] = await Promise.all([
+          fetch("adresses_bv.json"),
+          fetch("bureaux_bv.json"),
+        ]);
+
+        const rawAddr = await addrRes.json();
+        const rawBV   = await bvRes.json();
+
+        // ---------- ADRESSES ----------
+        ADRESSES = [];
+
+        if (Array.isArray(rawAddr)) {
+          ADRESSES = rawAddr.map(a => {
+            const lat = a.lat != null ? Number(a.lat) : null;
+            const lon = a.lon != null ? Number(a.lon) : null;
+            return {
+              adresse: a.adresse,
+              BV: a.BV,
+              lat: isFinite(lat) ? lat : null,
+              lon: isFinite(lon) ? lon : null,
+              Lieu_de_vote: a.Lieu_de_vote,
+              Loc_BV: a.Loc_BV,
+              adresse_norm: normalize(a.adresse)
+            };
+          });
+        } else if (rawAddr && rawAddr.features) {
+          ADRESSES = rawAddr.features.map(f => {
+            const a = f.attributes || f.properties || {};
+            let lat = a.lat, lon = a.lon;
+            if (f.geometry && typeof f.geometry.x === "number") {
+              lon = f.geometry.x;
+              lat = f.geometry.y;
+            }
+            lat = lat != null ? Number(lat) : null;
+            lon = lon != null ? Number(lon) : null;
+            return {
+              adresse: a.adresse,
+              BV: a.BV,
+              lat: isFinite(lat) ? lat : null,
+              lon: isFinite(lon) ? lon : null,
+              Lieu_de_vote: a.Lieu_de_vote,
+              Loc_BV: a.Loc_BV,
+              adresse_norm: normalize(a.adresse)
+            };
+          });
+        } else {
+          console.error("Format inattendu pour adresses_bv.json :", rawAddr);
+        }
+
+        // ---------- BUREAUX ----------
+        BUREAUX_BY_BV = {};
+
+        if (Array.isArray(rawBV)) {
+          rawBV.forEach(b => {
+            if (b.BV != null) {
+              const lat = b.lat != null ? Number(b.lat) : null;
+              const lon = b.lon != null ? Number(b.lon) : null;
+              BUREAUX_BY_BV[b.BV] = {
+                BV: b.BV,
+                libelle: b.libelle,
+                adresse_complete: b.adresse_complete,
+                lat: isFinite(lat) ? lat : null,
+                lon: isFinite(lon) ? lon : null
+              };
+            }
+          });
+        } else if (rawBV && rawBV.features) {
+          rawBV.features.forEach(f => {
+            const a = f.attributes || f.properties || {};
+            let lat = a.lat, lon = a.lon;
+            if (f.geometry && typeof f.geometry.x === "number") {
+              lon = f.geometry.x;
+              lat = f.geometry.y;
+            }
+            lat = lat != null ? Number(lat) : null;
+            lon = lon != null ? Number(lon) : null;
+            if (a.BV != null) {
+              BUREAUX_BY_BV[a.BV] = {
+                BV: a.BV,
+                libelle: a.libelle,
+                adresse_complete: a.adresse_complete,
+                lat: isFinite(lat) ? lat : null,
+                lon: isFinite(lon) ? lon : null
+              };
+            }
+          });
+        } else {
+          console.error("Format inattendu pour bureaux_bv.json :", rawBV);
+        }
+
+        if (!ADRESSES.length) {
+          note.textContent = "0 adresse chargée. Vérifiez le fichier adresses_bv.json.";
+        } else {
+          note.textContent = ADRESSES.length + " adresses chargées. Tapez au moins 3 caractères pour commencer la recherche.";
+        }
+
+      } catch (e) {
+        console.error("Erreur chargement JSON :", e);
+        note.textContent = "Erreur lors du chargement des données.";
+      }
+    }
+
+    loadData();
+
+    // ===================== ITINÉRAIRE =====================
+    function openItineraire(destLat, destLon) {
+      if (!destLat || !destLon) return;
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function (pos) {
+            const oLat = pos.coords.latitude;
+            const oLon = pos.coords.longitude;
+            const url =
+              "https://www.google.com/maps/dir/?api=1" +
+              "&origin=" + oLat + "," + oLon +
+              "&destination=" + destLat + "," + destLon;
+            window.open(url, "_blank");
+          },
+          function () {
+            const url =
+              "https://www.google.com/maps/dir/?api=1" +
+              "&destination=" + destLat + "," + destLon;
+            window.open(url, "_blank");
+          }
+        );
+      } else {
+        const url =
+          "https://www.google.com/maps/dir/?api=1" +
+          "&destination=" + destLat + "," + destLon;
+        window.open(url, "_blank");
+      }
+    }
+
+    // ===================== SURBRILLANCE =====================
+    function markSelectedResult(elem) {
+      if (lastSelectedResult) lastSelectedResult.classList.remove("selected");
+      if (elem) {
+        elem.classList.add("selected");
+        lastSelectedResult = elem;
+      }
+    }
+
+    // ===================== RECHERCHE =====================
+    function search() {
+      const q = document.getElementById("search").value.trim();
+      const div = document.getElementById("results");
+
+      if (!ADRESSES.length) {
+        document.getElementById("info-note").textContent =
+          "Aucune adresse en mémoire (0 enregistrement). Vérifiez le fichier adresses_bv.json.";
+        div.innerHTML = "";
+        return;
+      }
+
+      if (q.length < 3) {
+        div.innerHTML = "";
+        return;
+      }
+
+      const qn = normalize(q);
+      const results = ADRESSES
+        .filter(a => a.adresse_norm && a.adresse_norm.includes(qn))
+        .slice(0, 30);
+
+      if (!results.length) {
+        div.innerHTML = "<div class='result-item'><span class='result-text'>Aucune adresse trouvée.</span></div>";
+        return;
+      }
+
+      div.innerHTML = "";
+      results.forEach(r => {
+        const d = document.createElement("div");
+        d.className = "result-item";
+        d.innerHTML = `
+          <span class="result-badge">Bureau de vote ${r.BV}</span>
+          <span class="result-text">${r.adresse}</span>
+        `;
+        d.onclick = () => {
+          document.getElementById("search").value = r.adresse;
+          markSelectedResult(d);
+          showFiche(r);
+        };
+        div.appendChild(d);
+      });
+    }
+
+    let searchTimer = null;
+    document.getElementById("btnSearch").onclick = search;
+    document.getElementById("search").onkeyup = (e) => {
+      if (e.key === "Enter") { search(); return; }
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(search, 200);
+    };
+
+    document.getElementById("btnClear").onclick = () => {
+      document.getElementById("search").value = "";
+      document.getElementById("results").innerHTML = "";
+      document.getElementById("badge-bv").style.display = "none";
+      document.getElementById("fiche-content").textContent =
+        "Saisissez une adresse pour afficher les informations associées.";
+      if (marker) { map.removeLayer(marker); marker = null; }
+      lastSelectedResult = null;
+    };
+
+    // ===================== FICHE + CARTE =====================
+    function showFiche(d) {
+      try {
+        const badge = document.getElementById("badge-bv");
+        const fiche = document.getElementById("fiche-content");
+        const bv = (d && d.BV != null) ? BUREAUX_BY_BV[d.BV] : null;
+        if (!d) return;
+
+        // Badge
+        if (d.BV != null) {
+          badge.style.display = "inline-block";
+          badge.textContent = "Bureau de vote " + d.BV;
+        } else {
+          badge.style.display = "none";
+        }
+
+        const nomBV = (bv && bv.libelle) ? bv.libelle : (d.Lieu_de_vote || "-");
+        const adrBV = (bv && bv.adresse_complete) ? bv.adresse_complete : (d.Loc_BV || "-");
+
+        let destLat = null, destLon = null;
+        if (bv && typeof bv.lat === "number" && typeof bv.lon === "number") {
+          destLat = bv.lat; destLon = bv.lon;
+        } else if (typeof d.lat === "number" && typeof d.lon === "number") {
+          destLat = d.lat; destLon = d.lon;
+        }
+
+        const hasCoords = destLat != null && destLon != null;
+
+        fiche.innerHTML = `
+          <div>
+            <div class="fiche-section-title">Adresse recherchée</div>
+            <p class="fiche-line"><span class="fiche-label">Adresse :</span> ${d.adresse || "-"}</p>
+
+            <div class="fiche-divider"></div>
+
+            <div class="fiche-section-title">Bureau de vote</div>
+            <p class="fiche-line"><span class="fiche-label">Nom du bureau :</span> <span class="fiche-bv-name">${nomBV}</span></p>
+            <p class="fiche-line"><span class="fiche-label">Adresse du bureau :</span> ${adrBV}</p>
+
+            ${hasCoords ? `
+              <a class="btn-itineraire" href="#" onclick="openItineraire(${destLat}, ${destLon}); return false;">
+                <span>📍</span><span>Itinéraire Google Maps</span>
+              </a>
+            ` : ""}
+          </div>
+        `;
+
+        if (hasCoords) {
+          if (marker) map.removeLayer(marker);
+          marker = L.marker([destLat, destLon], { icon: voteIcon }).addTo(map);
+
+          marker.bindPopup(`
+            <strong>Bureau de vote ${d.BV || ""}</strong><br/>
+            ${nomBV}<br/>
+            <span style="font-size:0.85rem;color:#4b5563;">${adrBV}</span>
+          `).openPopup();
+
+          map.setView([destLat, destLon], 17);
+        }
+      } catch (err) {
+        console.error("Erreur showFiche :", err);
+      }
+    }
+
+    // Expose la fonction pour le onclick inline
+    window.openItineraire = openItineraire;
+  </script>
 </body>
 </html>
