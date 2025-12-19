@@ -36,26 +36,49 @@
 
     #map { flex: 1; }
 
-    /* Header */
+    /* Header avec logo */
     .app-header {
       display: flex;
       align-items: center;
       gap: 0.9rem;
     }
 
-    h1 {
-      margin: 0;
-      font-size: 1.35rem;
-      font-weight: 700;
+    .logo-vm {
+      height: 44px;
+      max-width: 190px;
+      object-fit: contain;
     }
 
-    /* Phrase mise en valeur */
+    .app-title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+      width: 100%;
+    }
+
+    /* ✅ TITRE ENCADRÉ */
+    .app-title {
+      margin: 0;
+      font-size: 1.35rem;
+      font-weight: 750;
+      color: #0f172a;
+      padding: 0.55rem 0.85rem;
+      border-radius: 14px;
+      background: #ffffff;
+      border: 2px solid #0080FF;
+      box-shadow: 0 6px 16px rgba(0,128,255,0.15);
+      display: inline-block;
+      width: fit-content;
+      max-width: 100%;
+    }
+
+    /* ✅ PHRASE PLUS MISE EN VALEUR */
     .subtitle {
-      font-size: 1.05rem;
+      font-size: 1.02rem;
       font-weight: 650;
       color: #0f172a;
-      margin-top: 0.35rem;
-      padding: 0.6rem 0.8rem;
+      margin: 0;
+      padding: 0.6rem 0.75rem;
       border-radius: 12px;
       background: #e8f2ff;
       border: 1px solid #cfe4ff;
@@ -75,6 +98,14 @@
       border: 1px solid #d1d5db;
       font-size: 0.95rem;
       background-color: #f9fafb;
+      outline: none;
+      transition: border-color .16s, box-shadow .16s, background-color .16s;
+    }
+
+    #search:focus {
+      border-color: #0080FF;
+      box-shadow: 0 0 0 2px rgba(0,128,255,0.20);
+      background-color: #ffffff;
     }
 
     #btnClear {
@@ -82,18 +113,30 @@
       background: transparent;
       cursor: pointer;
       font-size: 1rem;
+      padding: 0.2rem;
       color: #94a3b8;
+      transition: color .15s;
     }
 
+    #btnClear:hover { color: #475569; }
+
     #btnSearch {
-      padding: 0.5rem 1rem;
+      padding: 0.48rem 0.95rem;
       border-radius: 999px;
       border: none;
       background: linear-gradient(135deg, #0080FF, #0066cc);
       color: #ffffff;
+      font-size: 0.9rem;
       font-weight: 600;
       cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,128,255,0.40);
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      white-space: nowrap;
     }
+
+    #btnSearch:hover { filter: brightness(1.05); }
 
     #info-note {
       font-size: 0.8rem;
@@ -110,19 +153,26 @@
     }
 
     .result-item {
-      padding: 0.5rem 0.7rem;
+      padding: 0.45rem 0.7rem;
+      font-size: 0.9rem;
       display: flex;
+      align-items: center;
       gap: 0.45rem;
       cursor: pointer;
       border-bottom: 1px solid #edf0f4;
+      transition: background-color .12s, padding-left .12s, border-left .12s;
     }
+
+    .result-item:last-child { border-bottom: none; }
 
     .result-item:hover {
       background: #e0efff;
+      padding-left: 0.85rem;
     }
 
     .result-item.selected {
       background: #d4e6ff;
+      padding-left: 0.9rem;
       border-left: 3px solid #0080FF;
     }
 
@@ -134,180 +184,479 @@
       color: #0080FF;
       font-weight: 650;
       white-space: nowrap;
+      letter-spacing: 0.02em;
+    }
+
+    .result-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     /* Fiche */
     .fiche-card {
-      padding: 1rem;
+      margin-top: 0.1rem;
+      padding: 0.95rem 1rem;
       border-radius: 14px;
       border: 1px solid #e5e7eb;
       background: #ffffff;
+      box-shadow: 0 10px 20px rgba(15,23,42,0.04);
     }
 
     .fiche-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .fiche-title {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 600;
     }
 
     .fiche-badge-bv {
-      padding: 0.35rem 1rem;
+      padding: 0.32rem 1rem;
       border-radius: 999px;
       background: #0080FF;
       color: #ffffff;
+      font-size: 0.95rem;
       font-weight: 700;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 10px rgba(0,128,255,0.40);
     }
 
     .fiche-section-title {
-      font-size: 0.75rem;
+      margin-top: 0.15rem;
+      font-size: 0.76rem;
       font-weight: 650;
       text-transform: uppercase;
+      letter-spacing: 0.09em;
       color: #6b7280;
-      margin-top: 0.4rem;
     }
+
+    .fiche-line { margin: 0.08rem 0; font-size: 0.9rem; }
+    .fiche-label { color: #6b7280; margin-right: 0.25rem; }
+    .fiche-bv-name { color: #0080FF; font-weight: 650; }
+
+    .fiche-divider {
+      border-top: 1px dashed #d1d5db;
+      margin: 0.45rem 0 0.5rem 0;
+    }
+
+    .fiche-empty { font-size: 0.86rem; color: #6b7280; }
 
     .btn-itineraire {
       display: inline-flex;
-      margin-top: 0.6rem;
-      padding: 0.4rem 1rem;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.38rem 0.9rem;
+      margin-top: 0.45rem;
       border-radius: 999px;
       background: #16a34a;
       color: #ffffff;
+      font-size: 0.86rem;
       font-weight: 600;
+      text-decoration: none;
+      box-shadow: 0 4px 10px rgba(22,163,74,0.35);
+    }
+
+    .btn-itineraire:hover {
+      filter: brightness(1.05);
       text-decoration: none;
     }
 
     @media (max-width: 900px) {
       body { flex-direction: column; }
-      #left { width: 100%; }
+      #left { width: 100%; border-right:none; border-bottom:1px solid #e5e7eb; }
       #map { height: 50vh; }
+      .logo-vm { height: 38px; }
+      .app-title { width: 100%; }
     }
   </style>
 </head>
 
 <body>
+  <div id="left">
+    <div class="app-header">
+      <!-- Mets bien ce fichier dans ton repo -->
+      <img src="" class="logo-vm" />
+      <div class="app-title-block">
+        <!-- ✅ TITRE MODIFIÉ + ENCADRÉ -->
+        <h1 class="app-title">Trouver votre bureau de vote</h1>
 
-<div id="left">
-  <div class="app-header">
-    <div>
-      <h1>Trouver mon bureau de vote</h1>
-      <p class="subtitle">
-        Saisissez votre adresse pour connaître votre bureau de vote et l’itinéraire.
-      </p>
+        <!-- ✅ PHRASE MISE EN VALEUR -->
+        <p class="subtitle">Saisissez votre adresse pour connaître votre bureau de vote et l’itinéraire.</p>
+      </div>
+    </div>
+
+    <div class="search-row">
+      <input id="search" type="text" placeholder="Ex : 2 Rue de la Halle" autocomplete="off" />
+      <button id="btnClear" title="Effacer la recherche">✖</button>
+      <button id="btnSearch"><span class="icon">🔍</span><span>Rechercher</span></button>
+    </div>
+
+    <div id="info-note">Chargement des adresses...</div>
+    <div id="results"></div>
+
+    <div class="fiche-card">
+      <div class="fiche-header">
+        <h2 class="fiche-title">Fiche bureau de vote</h2>
+        <span id="badge-bv" class="fiche-badge-bv" style="display:none;"></span>
+      </div>
+      <div id="fiche-content" class="fiche-empty">
+        Saisissez une adresse pour afficher les informations associées.
+      </div>
     </div>
   </div>
 
-  <div class="search-row">
-    <input id="search" type="text" placeholder="Ex : 4 Rue Jean Monnet" />
-    <button id="btnClear">✖</button>
-    <button id="btnSearch">🔍 Rechercher</button>
-  </div>
+  <div id="map"></div>
 
-  <div id="info-note">Chargement des adresses…</div>
-  <div id="results"></div>
+  <script>
+    // ===================== CARTE =====================
+    var baseLayer = L.tileLayer(
+      "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+      { maxZoom: 19 }
+    );
 
-  <div class="fiche-card">
-    <div class="fiche-header">
-      <strong>Fiche bureau de vote</strong>
-      <span id="badge-bv" class="fiche-badge-bv" style="display:none;"></span>
-    </div>
-    <div id="fiche-content">
-      Saisissez une adresse pour afficher les informations associées.
-    </div>
-  </div>
-</div>
-
-<div id="map"></div>
-
-<script>
-  const map = L.map("map").setView([46.8, 2.5], 6);
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    maxZoom: 19
-  }).addTo(map);
-
-  let ADRESSES = [];
-  let BUREAUX = {};
-  let marker;
-
-  function normalize(s) {
-    return (s || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-  }
-
-  async function loadData() {
-    const [a, b] = await Promise.all([
-      fetch("adresses_bv.json"),
-      fetch("bureaux_bv.json")
-    ]);
-
-    ADRESSES = await a.json();
-    (await b.json()).forEach(x => BUREAUX[x.BV] = x);
-
-    document.getElementById("info-note").textContent =
-      ADRESSES.length + " adresses chargées. Tapez au moins 3 caractères.";
-  }
-
-  loadData();
-
-  function search() {
-    const q = normalize(searchInput.value);
-    if (q.length < 3) return results.innerHTML = "";
-
-    results.innerHTML = "";
-    ADRESSES.filter(a => normalize(a.adresse).includes(q)).slice(0, 30).forEach(r => {
-      const div = document.createElement("div");
-      div.className = "result-item";
-      div.innerHTML = `
-        <span class="result-badge">Bureau de vote ${r.BV}</span>
-        <span>${r.adresse}</span>
-      `;
-      div.onclick = () => showFiche(r);
-      results.appendChild(div);
+    var map = L.map("map", {
+      center: [46.8, 2.5],
+      zoom: 6,
+      layers: [baseLayer],
     });
-  }
 
-  function showFiche(d) {
-    const bv = BUREAUX[d.BV];
-    badgeBv.style.display = "inline-block";
-    badgeBv.textContent = "Bureau de vote " + d.BV;
+    var marker = null;
 
-    ficheContent.innerHTML = `
-      <div class="fiche-section-title">Adresse recherchée</div>
-      <p>${d.adresse}</p>
+    // Icône URNE BLEUE
+    var voteIcon = L.icon({
+      iconUrl: "data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'>\
+<rect x='8' y='22' width='48' height='34' rx='4' ry='4' fill='%230080FF'/>\
+<rect x='20' y='10' width='24' height='16' rx='3' ry='3' fill='%230080FF'/>\
+<rect x='14' y='28' width='36' height='18' rx='2' ry='2' fill='white'/>\
+<path d='M20 18h24' stroke='white' stroke-width='4' stroke-linecap='round'/>\
+</svg>",
+      iconSize: [42, 42],
+      iconAnchor: [21, 42],
+      popupAnchor: [0, -42]
+    });
 
-      <div class="fiche-section-title">Bureau de vote</div>
-      <p><strong>${bv.libelle}</strong></p>
-      <p>${bv.adresse_complete}</p>
+    // ===================== DONNÉES =====================
+    let ADRESSES = [];
+    let BUREAUX_BY_BV = {};
+    let lastSelectedResult = null;
 
-      <a class="btn-itineraire"
-         href="https://www.google.com/maps/dir/?api=1&destination=${bv.lat},${bv.lon}"
-         target="_blank">
-         📍 Itinéraire Google Maps
-      </a>
-    `;
+    function normalize(s) {
+      return (s || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
+    }
 
-    if (marker) map.removeLayer(marker);
-    marker = L.marker([bv.lat, bv.lon]).addTo(map)
-      .bindPopup(`<strong>Bureau de vote ${d.BV}</strong><br>${bv.libelle}`)
-      .openPopup();
+    async function loadData() {
+      const note = document.getElementById("info-note");
+      try {
+        const [addrRes, bvRes] = await Promise.all([
+          fetch("adresses_bv.json"),
+          fetch("bureaux_bv.json"),
+        ]);
 
-    map.setView([bv.lat, bv.lon], 17);
-  }
+        const rawAddr = await addrRes.json();
+        const rawBV = await bvRes.json();
 
-  const searchInput = document.getElementById("search");
-  const results = document.getElementById("results");
-  const ficheContent = document.getElementById("fiche-content");
-  const badgeBv = document.getElementById("badge-bv");
+        console.log("DEBUG adresses_bv.json =", rawAddr);
+        console.log("DEBUG bureaux_bv.json  =", rawBV);
 
-  document.getElementById("btnSearch").onclick = search;
-  searchInput.onkeyup = e => e.key === "Enter" && search();
-  document.getElementById("btnClear").onclick = () => {
-    searchInput.value = "";
-    results.innerHTML = "";
-    ficheContent.textContent = "Saisissez une adresse pour afficher les informations associées.";
-    badgeBv.style.display = "none";
-    if (marker) map.removeLayer(marker);
-  };
-</script>
+        // ---------- ADRESSES ----------
+        ADRESSES = [];
 
+        if (Array.isArray(rawAddr)) {
+          ADRESSES = rawAddr.map(a => {
+            const lat = a.lat != null ? Number(a.lat) : null;
+            const lon = a.lon != null ? Number(a.lon) : null;
+            return {
+              adresse: a.adresse,
+              BV: a.BV,
+              lat: isFinite(lat) ? lat : null,
+              lon: isFinite(lon) ? lon : null,
+              Lieu_de_vote: a.Lieu_de_vote,
+              Loc_BV: a.Loc_BV,
+              adresse_norm: normalize(a.adresse)
+            };
+          });
+        } else if (rawAddr && rawAddr.features) {
+          ADRESSES = rawAddr.features.map(f => {
+            const a = f.attributes || f.properties || {};
+            let lat = a.lat, lon = a.lon;
+            if (f.geometry && typeof f.geometry.x === "number") {
+              lon = f.geometry.x;
+              lat = f.geometry.y;
+            }
+            lat = lat != null ? Number(lat) : null;
+            lon = lon != null ? Number(lon) : null;
+            return {
+              adresse: a.adresse,
+              BV: a.BV,
+              lat: isFinite(lat) ? lat : null,
+              lon: isFinite(lon) ? lon : null,
+              Lieu_de_vote: a.Lieu_de_vote,
+              Loc_BV: a.Loc_BV,
+              adresse_norm: normalize(a.adresse)
+            };
+          });
+        } else {
+          console.error("Format inattendu pour adresses_bv.json :", rawAddr);
+        }
+
+        // ---------- BUREAUX ----------
+        BUREAUX_BY_BV = {};
+
+        if (Array.isArray(rawBV)) {
+          rawBV.forEach(b => {
+            if (b.BV != null) {
+              const lat = b.lat != null ? Number(b.lat) : null;
+              const lon = b.lon != null ? Number(b.lon) : null;
+              BUREAUX_BY_BV[b.BV] = {
+                BV: b.BV,
+                libelle: b.libelle,
+                adresse_complete: b.adresse_complete,
+                lat: isFinite(lat) ? lat : null,
+                lon: isFinite(lon) ? lon : null
+              };
+            }
+          });
+        } else if (rawBV && rawBV.features) {
+          rawBV.features.forEach(f => {
+            const a = f.attributes || f.properties || {};
+            let lat = a.lat, lon = a.lon;
+            if (f.geometry && typeof f.geometry.x === "number") {
+              lon = f.geometry.x;
+              lat = f.geometry.y;
+            }
+            lat = lat != null ? Number(lat) : null;
+            lon = lon != null ? Number(lon) : null;
+            if (a.BV != null) {
+              BUREAUX_BY_BV[a.BV] = {
+                BV: a.BV,
+                libelle: a.libelle,
+                adresse_complete: a.adresse_complete,
+                lat: isFinite(lat) ? lat : null,
+                lon: isFinite(lon) ? lon : null
+              };
+            }
+          });
+        } else {
+          console.error("Format inattendu pour bureaux_bv.json :", rawBV);
+        }
+
+        if (!ADRESSES.length) {
+          note.textContent = "0 adresse chargée. Vérifiez le fichier adresses_bv.json.";
+        } else {
+          note.textContent =
+            ADRESSES.length +
+            " adresses chargées. Tapez au moins 3 caractères pour commencer la recherche.";
+        }
+      } catch (e) {
+        console.error("Erreur chargement JSON :", e);
+        note.textContent = "Erreur lors du chargement des données.";
+      }
+    }
+
+    loadData();
+
+    // ===================== ITINÉRAIRE =====================
+    function openItineraire(destLat, destLon) {
+      if (!destLat || !destLon) return;
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          function (pos) {
+            const oLat = pos.coords.latitude;
+            const oLon = pos.coords.longitude;
+            const url =
+              "https://www.google.com/maps/dir/?api=1" +
+              "&origin=" + oLat + "," + oLon +
+              "&destination=" + destLat + "," + destLon;
+            window.open(url, "_blank");
+          },
+          function () {
+            const url =
+              "https://www.google.com/maps/dir/?api=1" +
+              "&destination=" + destLat + "," + destLon;
+            window.open(url, "_blank");
+          }
+        );
+      } else {
+        const url =
+          "https://www.google.com/maps/dir/?api=1" +
+          "&destination=" + destLat + "," + destLon;
+        window.open(url, "_blank");
+      }
+    }
+
+    // ===================== SURBRILLANCE =====================
+    function markSelectedResult(elem) {
+      if (lastSelectedResult) {
+        lastSelectedResult.classList.remove("selected");
+      }
+      if (elem) {
+        elem.classList.add("selected");
+        lastSelectedResult = elem;
+      }
+    }
+
+    // ===================== RECHERCHE =====================
+    function search() {
+      const q = document.getElementById("search").value.trim();
+      const div = document.getElementById("results");
+
+      if (!ADRESSES.length) {
+        document.getElementById("info-note").textContent =
+          "Aucune adresse en mémoire (0 enregistrement). Vérifiez le fichier adresses_bv.json.";
+        div.innerHTML = "";
+        return;
+      }
+
+      if (q.length < 3) {
+        div.innerHTML = "";
+        return;
+      }
+
+      const qn = normalize(q);
+      const results = ADRESSES
+        .filter(a => a.adresse_norm && a.adresse_norm.includes(qn))
+        .slice(0, 30);
+
+      if (!results.length) {
+        div.innerHTML =
+          "<div class='result-item'><span class='result-text'>Aucune adresse trouvée.</span></div>";
+        return;
+      }
+
+      div.innerHTML = "";
+      results.forEach(r => {
+        const d = document.createElement("div");
+        d.className = "result-item";
+        d.innerHTML = `
+          <span class="result-badge">Bureau de vote ${r.BV}</span>
+          <span class="result-text">${r.adresse}</span>
+        `;
+        d.onclick = () => {
+          document.getElementById("search").value = r.adresse;
+          markSelectedResult(d);
+          showFiche(r);
+        };
+        div.appendChild(d);
+      });
+    }
+
+    let searchTimer = null;
+    document.getElementById("btnSearch").onclick = search;
+    document.getElementById("search").onkeyup = (e) => {
+      if (e.key === "Enter") {
+        search();
+        return;
+      }
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(search, 200);
+    };
+
+    document.getElementById("btnClear").onclick = () => {
+      document.getElementById("search").value = "";
+      document.getElementById("results").innerHTML = "";
+      document.getElementById("badge-bv").style.display = "none";
+      document.getElementById("fiche-content").textContent =
+        "Saisissez une adresse pour afficher les informations associées.";
+      if (marker) {
+        map.removeLayer(marker);
+        marker = null;
+      }
+      lastSelectedResult = null;
+    };
+
+    // ===================== FICHE + CARTE =====================
+    function showFiche(d) {
+      try {
+        const badge = document.getElementById("badge-bv");
+        const fiche = document.getElementById("fiche-content");
+        const bv = (d && d.BV != null) ? BUREAUX_BY_BV[d.BV] : null;
+
+        if (!d) return;
+
+        // Badge Bureau de vote
+        if (d.BV != null) {
+          badge.style.display = "inline-block";
+          badge.textContent = "Bureau de vote " + d.BV;
+        } else {
+          badge.style.display = "none";
+        }
+
+        const nomBV = bv && bv.libelle ? bv.libelle : (d.Lieu_de_vote || "-");
+        const adrBV = bv && bv.adresse_complete ? bv.adresse_complete : (d.Loc_BV || "-");
+
+        let destLat = null, destLon = null;
+        if (bv && typeof bv.lat === "number" && typeof bv.lon === "number") {
+          destLat = bv.lat;
+          destLon = bv.lon;
+        } else if (typeof d.lat === "number" && typeof d.lon === "number") {
+          destLat = d.lat;
+          destLon = d.lon;
+        }
+
+        const hasCoords = destLat != null && destLon != null;
+
+        const html = `
+          <div>
+            <div class="fiche-section-title">Adresse recherchée</div>
+            <p class="fiche-line">
+              <span class="fiche-label">Adresse :</span> ${d.adresse || "-"}
+            </p>
+
+            <div class="fiche-divider"></div>
+
+            <div class="fiche-section-title">Bureau de vote</div>
+            <p class="fiche-line">
+              <span class="fiche-label">Nom du bureau :</span>
+              <span class="fiche-bv-name">${nomBV}</span>
+            </p>
+            <p class="fiche-line">
+              <span class="fiche-label">Adresse du bureau :</span> ${adrBV}
+            </p>
+
+            ${hasCoords ? `
+              <a class="btn-itineraire"
+                 href="#"
+                 onclick="openItineraire(${destLat}, ${destLon}); return false;">
+                <span class="icon">📍</span>
+                <span>Itinéraire Google Maps</span>
+              </a>
+            ` : ""}
+          </div>
+        `;
+
+        fiche.innerHTML = html;
+
+        // Carte + popup
+        if (hasCoords) {
+          if (marker) {
+            map.removeLayer(marker);
+          }
+          marker = L.marker([destLat, destLon], { icon: voteIcon }).addTo(map);
+
+          const popupHtml = `
+            <strong>Bureau de vote ${d.BV || ""}</strong><br/>
+            ${nomBV}<br/>
+            <span style="font-size:0.85rem;color:#4b5563;">${adrBV}</span>
+          `;
+          marker.bindPopup(popupHtml).openPopup();
+
+          map.setView([destLat, destLon], 17);
+        }
+      } catch (err) {
+        console.error("Erreur dans showFiche :", err, d);
+      }
+    }
+  </script>
 </body>
 </html>
