@@ -47,9 +47,11 @@
       overflow: auto;
     }
 
+    /* IMPORTANT: garantir la hauteur du conteneur Leaflet (fix iframe) */
     #map{
       flex: 1;
       min-width: 0;
+      height: 100%;
     }
 
     /* ===== Bannière compacte (anti-vide) ===== */
@@ -370,8 +372,37 @@
       layers: [baseLayer],
     });
 
-    // Fix affichage quand le layout est en flex
-    setTimeout(function(){ map.invalidateSize(); }, 250);
+    // ============ FIX IFRAME / FLEX (Leaflet) ============
+    window.map = map; // expose pour refreshMap()
+
+    function refreshMap() {
+      if (!window.map) return;
+      // Plusieurs passes courtes pour laisser le layout se stabiliser (iframe/flex/fonts)
+      setTimeout(() => window.map.invalidateSize(true), 50);
+      setTimeout(() => window.map.invalidateSize(true), 300);
+      setTimeout(() => window.map.invalidateSize(true), 800);
+    }
+
+    window.addEventListener("load", refreshMap);
+    window.addEventListener("resize", refreshMap);
+    window.addEventListener("orientationchange", refreshMap);
+
+    document.addEventListener("visibilitychange", () => {
+      if (!document.hidden) refreshMap();
+    });
+
+    // Observer la taille du conteneur carte (le plus efficace en iframe)
+    const mapEl = document.getElementById("map");
+    if (mapEl && "ResizeObserver" in window) {
+      const ro = new ResizeObserver(() => refreshMap());
+      ro.observe(mapEl);
+    } else {
+      // fallback si ResizeObserver non dispo
+      setInterval(refreshMap, 2000);
+    }
+
+    // déclenche une première fois
+    refreshMap();
 
     var marker = null;
 
@@ -500,6 +531,9 @@
           note.textContent = ADRESSES.length + " adresses chargées. Tapez au moins 3 caractères pour commencer la recherche.";
         }
 
+        // Après chargement des données, on rafraîchit la carte (iframe)
+        refreshMap();
+
       } catch (e) {
         console.error("Erreur chargement JSON :", e);
         note.textContent = "Erreur lors du chargement des données.";
@@ -607,6 +641,7 @@
         "Saisissez une adresse pour afficher les informations associées.";
       if (marker) { map.removeLayer(marker); marker = null; }
       lastSelectedResult = null;
+      refreshMap();
     };
 
     // ===================== FICHE + CARTE =====================
@@ -667,6 +702,9 @@
           `).openPopup();
 
           map.setView([destLat, destLon], 17);
+
+          // Refresh après animations/zoom (iframe)
+          refreshMap();
         }
       } catch (err) {
         console.error("Erreur showFiche :", err);
