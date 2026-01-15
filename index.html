@@ -373,14 +373,14 @@
     });
 
     // ============ FIX IFRAME / FLEX (Leaflet) ============
-    window.map = map; // expose pour refreshMap()
-
+    // IMPORTANT : on évite les refresh inutiles en boucle (setInterval)
+    // et on utilise plutôt ResizeObserver + events (plus propre et stable).
     function refreshMap() {
-      if (!window.map) return;
+      if (!map) return;
       // Plusieurs passes courtes pour laisser le layout se stabiliser (iframe/flex/fonts)
-      setTimeout(() => window.map.invalidateSize(true), 50);
-      setTimeout(() => window.map.invalidateSize(true), 300);
-      setTimeout(() => window.map.invalidateSize(true), 800);
+      setTimeout(() => map.invalidateSize(true), 50);
+      setTimeout(() => map.invalidateSize(true), 300);
+      setTimeout(() => map.invalidateSize(true), 800);
     }
 
     window.addEventListener("load", refreshMap);
@@ -397,8 +397,13 @@
       const ro = new ResizeObserver(() => refreshMap());
       ro.observe(mapEl);
     } else {
-      // fallback si ResizeObserver non dispo
-      setInterval(refreshMap, 2000);
+      // fallback (rare) : quelques refresh au démarrage, puis stop
+      let n = 0;
+      const t = setInterval(() => {
+        refreshMap();
+        n++;
+        if (n >= 5) clearInterval(t);
+      }, 600);
     }
 
     // déclenche une première fois
